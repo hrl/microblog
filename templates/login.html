@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel='stylesheet' href='../static/css/login.css' />
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if not user.is_authenticated %}
+            <form class="form-signin" role="form" action="" method=post>
+                <h2 class="form-signin-heading">Please login</h2>
+                <input type="text" class="form-control" placeholder="Username" id="username" name="username" required autofocus>
+                <input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
+<!--
+                <label class="checkbox">
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+-->
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+                <input type="hidden" name="next" value="{{ next|escape }}" />
+                {% csrf_token %}
+            </form>
+
+            {% if form.errors %}
+            <div class="alert alert-danger"><strong>Error:</strong> {{ form.errors }} </div>
+            {% endif %}
+        {% else %}
+        <div class="alert alert-danger"><strong>Error:</strong> You have been logged in </div>
+	{% endif %}
+
+    </div>
+{% endblock %}

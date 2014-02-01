@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div id='navbar'>
+        {% include 'navbar.html' %}
+    </div>
+
+    <div class="container">
+	<div style="margin:60px;"></div>
+
+        <div class="row">
+
+            {% block contain %}
+            {% endblock %}
+            <!-- /.mblog-main-need-grids -->
+
+            <div class="col-sm-2 col-sm-offset-1">
+                {% include 'left-sidebar.html' %}
+            </div><!-- /.sidebar -->
+
+        </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <div class="footer">
+      <p>Panda MicroBlog powered by <a href="https://www.djangoproject.com/">Django</a>.</p>
+      <p>
+        <a href="#top">Back to top</a>
+      </p>
+    </div>
+
+
+{% endblock %}
