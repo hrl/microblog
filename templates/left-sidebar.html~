@@ -1,11 +1,11 @@
-            <div class="col-sm-2 col-sm-offset-1">
               <div class="sidebar-module sidebar-module-inset">
                 <div class="thumbnail" style="width:100%;">
                 	<img src={% if user.userdetail.image %}{{user.userdetail.image}}{% else %}"{{ STATIC_URL }}images/avatar.jpg"{% endif %} width='100%' alt="...">
                 	<div class="caption">
                 		<h3>{{ user.userdetail.nickname }}</h3>
                 		<p>{{ user.userdetail.self_describe }}</p>
-                		<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                		<p><a href="#" class="btn btn-default" role="button">关注{{ user.userdetail.following.0 }}</a></p>
+                		<p><a href="#" class="btn btn-default" role="button">粉丝{{ user.userdetail.follower.0 }}</a></p>
                 	</div>
     			</div>
               </div>
@@ -18,5 +18,4 @@
                   <li><a href="https://twitter.com/xghrl">Twitter</a></li>
                   <li><a href="https://www.facebook.com/ruilin.huang.58">Facebook</a></li>
                 </ol>
-              </div>
-            </div><!-- /.sidebar -->
+              </div><!-- /.sidebar -->

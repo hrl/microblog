@@ -1,3 +1,24 @@
+u = User():
+    u.id : user id
+    u.username : username
+
+    u.userdetail : UserDetail
+    u.userdetail.nickname
+                .self_describe
+                .mail
+                .image : avatar
+                .birthday
+                .city
+                .sex
+                .sexual_orientation
+    
+    u.following : queryset, User that u is following
+    u.following.get().follow : one user that u is following
+
+    u.follower : queryset, User that is following u
+    u.follower.get().user : one user that is following u
+
+----------------------
 注册：
 username，password，nickname
 
@@ -9,7 +30,7 @@ username，password，nickname
 	未登录：登录/注册页面
 	已登录：个人消息流
 
-消息流：W
+消息流：
 	未登录：登录/注册页面
 	已登录：显示关注的消息流
 
@@ -28,4 +49,14 @@ username，password，nickname
 	修改资料
 	修改密码
 
+----------------------
+
+关注：
 	
+----------------------
+
+通知：
+	@/私信 -> InformPool
+
+----------------------
+其他功能：
