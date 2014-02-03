@@ -19,16 +19,19 @@
             {% endblock %}
             <!-- /.mblog-main-need-grids -->
 
+            {% block sidebar %}
             <div class="col-sm-2 col-sm-offset-1">
                 {% include 'left-sidebar.html' %}
-            </div><!-- /.sidebar -->
+            </div>
+            {% endblock %}
+            <!-- /.sidebar-need-grids -->
 
         </div><!-- /.row -->
 
     </div><!-- /.container -->
 
     <div class="footer">
-      <p>Panda MicroBlog powered by <a href="https://www.djangoproject.com//">Django</a>.</p>
+      <p>Panda MicroBlog powered by <a href="https://www.djangoproject.com/">Django</a>.</p>
       <p>
         <a href="#top">Back to top</a>
       </p>

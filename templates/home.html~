@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+
+{% block contain %}
+
+{% endblock %}
+
+{% block sidebar %}
+	{% include 'target-left-sidebar.html' %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "home.html" %}
+
+{% block contain %}
+<div class="col-sm-9">
+	<p>{{ target_user.userdetail.nickname }}关注了{{ target_user.following.count }}人</p>
+	{% for following in following_list %}
+		<p><a href="/u/{{ following.follow.id }}">{{ following.follow.userdetail.nickname }}</a></p>
+	{% endfor %}
+
+	{% jinja %}
+		{% if page > 1 %}
+		<a href="?page={{ page-1 }}" class="btn btn-default" role="button">{{ page-1 }}</a>
+		{% endif %}
+		<a href="#" class="btn btn-default" role="button">{{ page }}</a>
+		{% if page < max_page %}
+		<a href="?page={{ page+1 }}" class="btn btn-default" role="button">{{ page-1 }}</a>
+		{% endif %}
+		{% if page+2 < max_page %}
+		<a href="?page={{ max_page }}" class="btn btn-default" role="button">{{ max_page }}</a>
+		{% endif %}
+	{% endjinja %}
+</div>
+
+{% endblock %}

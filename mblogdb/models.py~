@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class UserDetail(models.Model):
     user = models.OneToOneField(User, primary_key=True)
-    nickname = models.CharField(max_length=30)
+    nickname = models.CharField(max_length=30, unique=True)
     self_describe = models.TextField(blank=True)
     mail = models.EmailField(unique=True)
     image = models.URLField(blank=True)
@@ -28,11 +28,17 @@ class Follow(models.Model):
     # u.follower.get().user -> one user who is following u
     # u.follower.get().follow -> u
 
+    date = models.DateTimeField()
+
 class Post(models.Model):
     user = models.ForeignKey(User, related_name="post")
     repo = models.ForeignKey('self', related_name="repoed",
                              blank=True, null=True)
     body = models.TextField()
+    encoded_body = models.TextField()
+    image = models.TextField(blank=True)
+    audio = models.TextField(blank=True)
+    bideo = models.TextField(blank=True)
     date = models.DateTimeField()
     is_active = models.BooleanField()
 
@@ -61,10 +67,12 @@ class InformPool(models.Model):
     user = models.ForeignKey(User, related_name="information")
 
     inform_type = models.IntegerField()
-    # 0:@
-    # 1:Message
+    # 0:post
+    # 1:comment
+    # 2:Message
 
     body = models.TextField()
+    date = models.DateTimeField()
 
 class Collect(models.Model):
     user = models.ForeignKey(User, related_name="collection")
@@ -74,3 +82,6 @@ class Collect(models.Model):
     post = models.ForeignKey(Post, related_name="collector")
     # p = Post()
     # p.collector.count() -> the number of people that is collecting p
+
+class Topic(models.Model):
+    name = models.CharField(max_length=140)

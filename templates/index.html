@@ -19,9 +19,10 @@
             {% endblock %}
             <!-- /.mblog-main-need-grids -->
 
-            <div class="col-sm-2 col-sm-offset-1">
-                {% include 'left-sidebar.html' %}
-            </div><!-- /.sidebar -->
+            {% block sidebar %}
+				{% include 'left-sidebar.html' %}
+            {% endblock %}
+            <!-- /.sidebar-need-grids -->
 
         </div><!-- /.row -->
 

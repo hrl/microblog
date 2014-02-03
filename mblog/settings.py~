@@ -65,7 +65,7 @@ DATABASES = {
         'PASSWORD': 'mblogadmin',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
-	'CHARSET': 'utf8',
+        'CHARSET': 'utf8',
     }
 }
 
@@ -107,3 +107,5 @@ ADMIN_MEDIA_ROOT = '/static/admin/'
 TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates/').replace('\\','/'),
 )
+
+

@@ -15,6 +15,10 @@ from mblog.views import main
 from mblog.views import logout
 from mblog.views import profile
 from mblog.views import password
+from mblog.views import home
+from mblog.views import following
+from mblog.views import follower
+from mblog.views import follow
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -24,6 +28,10 @@ urlpatterns = patterns('',
     url(r'^logout$', logout),
     url(r'^profile$', profile),
     url(r'^password$', password),
+    url(r'^u/(\d+)$', home),
+    url(r'^u/(\d+)/following$', following),
+    url(r'^u/(\d+)/follower$', follower),
+    url(r'^follow$', follow),
     url(r'^time/plus/(\d{1,2})/$', hours_ahead),
     url(r'^hello/$', hello),
     url(r'^show/$', display_meta),

@@ -2,6 +2,11 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from mblogdb.models import UserDetail
 import datetime
+import re
+from flask import Markup
+
+from mblogdb.config import *
+from mblogdb.models import *
 
 from django import forms
 from django.forms.util import ErrorList
@@ -12,6 +17,24 @@ from django.http import HttpResponseRedirect
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+
+from math import ceil
+
+def get_time():
+    return unicode(datetime.datetime.now())[:19]
+
+def inform(user_id, inform_type, body):
+    user_id = int(user_id)
+    user = User.objects.filter(id=user_id).get()
+    type_dict = {'post': 0,
+                 'comment': 1,
+                 'message': 2}
+    inform_type = type_dict[inform_type]
+    new_inform = InformPool(user=user,
+                            inform_type=inform_type,
+                            body=body,
+                            date=get_time())
+    new_inform.save()
 
 def register(request):
     if request.method == 'POST':
@@ -44,7 +67,7 @@ def logout(request):
 def profile(request):
     class ProfileForm(forms.Form):
         nickname = forms.CharField(max_length=30)
-        self_describe = forms.CharField(max_length=200,required=False)
+        self_describe = forms.CharField(max_length=140,required=False)
         mail = forms.EmailField()
         image = forms.URLField(required=False)
         birthday = forms.DateField(required=False)
@@ -129,6 +152,164 @@ def password(request):
                               {'form':form},
                               context_instance=RequestContext(request))
 
+def home(request, uid):
+    pass
+
+def following(request, uid):
+    target_user = User.objects.filter(id=uid).get()
+
+    # temp handle
+    following_number = target_user.following.count()
+    try:
+        page = int(request.GET['page'])
+    except:
+        page = 1
+    max_page = int(ceil(float(following_number) / USER_PER_PAGE))
+    max_page = max(1, max_page)
+    page = min(page, max_page)
+
+    following_list = target_user.following.all()[(page-1)*USER_PER_PAGE:
+                                                page*USER_PER_PAGE]
+
+    return render_to_response("following.html", {
+        'target_user': target_user,
+        'following_list': following_list,
+        'page': page,
+        'max_page': max_page,
+    }, context_instance=RequestContext(request))
+
+def follower(request, uid):
+    target_user = User.objects.filter(id=uid).get()
+
+    # temp handle
+    follower_number = target_user.follower.count()
+    try:
+        page = int(request.GET['page'])
+    except:
+        page = 1
+    max_page = int(ceil(float(follower_number) / USER_PER_PAGE))
+    max_page = max(1, max_page)
+    page = min(page, max_page)
+
+    follower_list = target_user.follower.all()[(page-1)*USER_PER_PAGE:
+                                                page*USER_PER_PAGE]
+
+    return render_to_response("follower.html", {
+        'target_user': target_user,
+        'follower_list': follower_list,
+        'page': page,
+        'max_page': max_page,
+    }, context_instance=RequestContext(request))
+
+def follow(request):
+    try:
+        target_user = User.objects.filter(id=int(request.GET['uid'])).get()
+        user = request.user
+        now = get_time()
+        assert user != target_user
+        assert Follow.objects.filter(user=user, follow=target_user).count() == 0
+        following = Follow(user=user, follow=target_user, date=now)
+        following.save()
+        return HttpResponse('success')
+    except:
+        raise
+        return HttpResponse('fail')
+
+# write microblog
+def convert_at_link(nickname):
+    if UserDetail.objects.filter(nickname=nickname).count() == 1:
+        user_id = int(UserDetail.objects.filter(nickname=nickname).get().user_id)
+        link = u"<a class='at_link' href='/u/" + unicode(user_id) + u"'>" \
+            + u"@" + unicode(nickname) + u" </a>"
+        return link
+    else:
+        return u"@" + nickname + u' '
+
+def convert_topic_link(topic):
+    if Topic.objects.filter(name=topic).count() == 0:
+        new_topic = Topic(name=topic)
+        new_topic.save()
+        topic_id = new_topic.id
+    else:
+        topic_id = int(Topic.objects.filter(name=topic).get().id)
+
+    link = u"<a class='topic_link' href='/t/" + unicode(topic_id) + u"'>" \
+        + u"#" + unicode(topic) + u"#</a>"
+    return link
+
+def text_handle(text, text_type):
+    text = unicode(Markup.escape(text))
+
+    # @user
+    text = re.sub(r'@[^@]+? ',
+                  lambda x: convert_at_link(x.group(0)[1:-1]),
+                  text)
+
+    if text_type == u'post':
+        # #topic#
+        text = re.sub(r'#[^#]+?#',
+                      lambda x: convert_topic_link(x.group(0)[1:-1]),
+                      text)
+
+    return text
+
+class WriteForm(forms.Form):
+    repo = forms.IntegerField(required=False)
+    body = forms.CharField(max_length=140)
+    image = forms.CharField(required=False)
+    audio = forms.CharField(required=False)
+    video = forms.CharField(required=False)
+
+    def clean_image(self):
+        cimage = self.cleaned_data.get('image', '')
+        if len(cimage.split('/////')) > IMAGE_PER_POST:
+            raise forms.ValidationError("Invalid input: too many images")
+        return cimage
+
+    def clean_audio(self):
+        caudio = self.cleaned_data.get('audio', '')
+        if len(caudio.split('/////')) > AUDIO_PER_POST:
+            raise forms.ValidationError("Invalid input: too many audios")
+        return caudio
+
+    def clean_video(self):
+        cvideo = self.cleaned_data.get('video', '')
+        if len(cvideo.split('/////')) > VIDEO_PER_POST:
+            raise forms.ValidationError("Invalid input: too many videos")
+        return cvideo
+
+@login_required(login_url="/login")
+def wirte(request):
+    if request.method == "POST":
+        form = WriteForm(request.POST)
+        if form.is_valid():
+            cdata = form.cleaned_data
+            try:
+                repo = int(cdata['repo'])
+            except:
+                repo = None
+            body = cdata['body']
+            image = cdata.get('image', '')
+            audio = cdata.get('video', '')
+            video = cdata.get('video', '')
+
+            safe_body = text_handle(body, 'post')
+
+            new_post = Post(user=request.user,
+                            repo=repo,
+                            body=body,
+                            encoded_body=safe_body,
+                            image=image,
+                            audio=audio,
+                            video=video,
+                            date=get_time(),
+                            is_active=True)
+            new_post.save()
+
+            # inform @
+            re.sub(r"href='/u/\d+'",
+                   lambda x: inform(x.group(0)[9:-1], 'post', new_post.id),
+                   safe_body)
 
 
 def main(request):

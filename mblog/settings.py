@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mblogdb',
+    'jinja_tag',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,3 +108,5 @@ ADMIN_MEDIA_ROOT = '/static/admin/'
 TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates/').replace('\\','/'),
 )
+
+
