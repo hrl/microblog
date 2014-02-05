@@ -30,6 +30,12 @@ class Follow(models.Model):
 
     date = models.DateTimeField()
 
+class Topic(models.Model):
+    name = models.CharField(max_length=140)
+
+    def __unicode__(self):
+        return self.name
+
 class Post(models.Model):
     user = models.ForeignKey(User, related_name="post")
     repo = models.ForeignKey('self', related_name="repoed",
@@ -38,7 +44,8 @@ class Post(models.Model):
     encoded_body = models.TextField()
     image = models.TextField(blank=True)
     audio = models.TextField(blank=True)
-    bideo = models.TextField(blank=True)
+    video = models.TextField(blank=True)
+    topic = models.ManyToManyField(Topic, related_name="post")
     date = models.DateTimeField()
     is_active = models.BooleanField()
 
@@ -82,6 +89,3 @@ class Collect(models.Model):
     post = models.ForeignKey(Post, related_name="collector")
     # p = Post()
     # p.collector.count() -> the number of people that is collecting p
-
-class Topic(models.Model):
-    name = models.CharField(max_length=140)

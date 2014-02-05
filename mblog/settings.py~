@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mblogdb',
+    'jinja_tag',
 )
 
 MIDDLEWARE_CLASSES = (

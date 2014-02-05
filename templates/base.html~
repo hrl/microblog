@@ -4,7 +4,7 @@
         <meta charset='utf-8' />
 
         {% block title %}
-        {% if target-user %}
+        {% if target_user %}
         <title>{{ target_user.userdetail.nickname }} - PandaMicroBlog</title>
         {% elif user %}
         <title>{{ user.userdetail.nickname }} - PandaMicroBlog</title>

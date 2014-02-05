@@ -3,7 +3,7 @@
 {% block contain %}
 
 {% if user.is_authenticated %}
-
+<div class="col-sm-9">
 	{% if form.errors %}
 	<div class="alert alert-danger"><strong>Error:</strong> {{ form.errors }} </div>
 	{% endif %}
@@ -135,8 +135,7 @@
 		<button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
 		{% csrf_token %}
 	</form>
-
-
+</div>
 
 {% endif %}
 

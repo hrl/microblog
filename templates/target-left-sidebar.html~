@@ -6,7 +6,7 @@
                 		<h3>{{ target_user.userdetail.nickname }}</h3>
                 		<p>{{ target_user.userdetail.self_describe }}</p>
                 		<p><a href="/u/{{target_user.id}}/following" class="btn btn-default" role="button">关注{{ target_user.following.count }}</a></p>
-                		<p><a href="/u/{{target_user.id}}/following" class="btn btn-default" role="button">粉丝{{ target_user.follower.count }}</a></p>
+                		<p><a href="/u/{{target_user.id}}/follower" class="btn btn-default" role="button">粉丝{{ target_user.follower.count }}</a></p>
                 		<p><a href="/u/{{target_user.id}}" class="btn btn-default" role="button">微博{{ target_user.post.count }}</a></p>
                 	</div>
     			</div>

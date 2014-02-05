@@ -1,0 +1,177 @@
+{% extends 'index.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block contain %}
+<div class="col-sm-9">
+
+	{% if form.errors %}
+	<div class="alert alert-danger"><strong>Error:</strong> {{ form.errors }} </div>
+	{% endif %}
+
+	<p>{{ user.post.all.2.encoded_body | safe }}</p>
+	<p>{{ user.post.all.2.topic.all.0.name | safe }}</p>
+
+	<form role="form" action="" method=post>
+
+		<div>
+
+			<div class="form-group">
+    		<label for="body" class="control-label">发微博</label>
+    		<div>
+      		<textarea class="form-control" id="body" name="body" rows="3" required></textarea>
+    		</div>
+			</div><!-- body -->
+
+			<div class="form-group">
+    		<label for="add_image" class="control-label">添加图片</label>
+				<p style="margin:0px;" id="image_line1"></p>
+				<p style="margin:0px;" id="image_line2"></p>
+				<p id="image_line3"></p>
+    		<div class="form-inline">
+					<div class="col-sm-11" style="padding:0;">
+      			<input type="text" class="form-control" id="add_image" name="add_image">
+					</div>
+					<div class="col-sm-1">
+						<a href="javascript:;" class="btn btn-default" id="add_image_button" role="button">添加</a>
+					</div>
+    		</div>
+			</div><!-- add_image -->
+
+			<div class="form-group">
+    		<label for="add_video" class="control-label">添加视频</label>
+				<p style="margin:0px;" id="video_line"></p>
+    		<div class="form-inline">
+					<div class="col-sm-11" style="padding:0;">
+      			<input type="text" class="form-control" id="add_video" name="add_video">
+					</div>
+					<div class="col-sm-1">
+						<a href="javascript:;" class="btn btn-default" id="add_video_button" role="button">添加</a>
+					</div>
+    		</div>
+			</div><!-- add_video -->
+
+
+			<div class="form-group">
+    		<label for="add_audio" class="control-label">添加音频</label>
+				<p style="margin:0px;" id="audio_line"></p>
+    		<div class="form-inline">
+					<div class="col-sm-11" style="padding:0;">
+      			<input type="text" class="form-control" id="add_audio" name="add_audio">
+					</div>
+					<div class="col-sm-1">
+						<a href="javascript:;" class="btn btn-default" id="add_audio_button" role="button">添加</a>
+					</div>
+    		</div>
+			</div><!-- add_audio -->
+
+		</div>
+		
+		<input type="hidden" id="repo" name="repo" value="">
+		<input type="hidden" id="image" name="image" value="">
+		<input type="hidden" id="audio" name="audio" value="">
+		<input type="hidden" id="video" name="video" value="">
+
+		<button class="btn btn-primary btn-lg btn-block" style="margin-top:10px;" type="submit">发布</button>
+		{% csrf_token %}
+	</form>
+
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript">
+var add_error = new Array()
+function push_image(image_url, image_number){
+	switch (Math.ceil(image_number/3)){
+		case 1:
+			image_line = $('#image_line1').html() + '<img src="' + image_url +'" class="img-thumbnail">';
+			$('#image_line1').html(image_line);
+			break;
+		case 2:
+			image_line = $('#image_line2').html() + '<img src="' + image_url +'" class="img-thumbnail">';
+			$('#image_line2').html(image_line);
+			break;
+		case 3:
+			image_line = $('#image_line3').html() + '<img src="' + image_url +'" class="img-thumbnail">';
+			$('#image_line3').html(image_line);
+			break;
+	}
+}
+
+function push_video(video_url, video_number){
+	switch (Math.ceil(video_number/1)){
+		case 1:
+			video_line = $('#video_line').html() + '<video src="' + video_url +'"  width="320" height="240" controls="controls"></video>';
+			$('#video_line').html(video_line);
+			break;
+	}
+}
+
+function push_audio(audio_url, audio_number){
+	switch (Math.ceil(audio_number/1)){
+		case 1:
+			audio_line = $('#audio_line').html() + '<audio src="' + audio_url +'" controls="controls"></audio>';
+			$('#audio_line').html(audio_line);
+			break;
+	}
+}
+
+$('#add_image_button')[0].onclick = function(){
+	image_input = $('#add_image').val();
+	image_re = RegExp(/[^?#]+\.jpeg$|[^?#]+\.jpg$|[^?#]+\.png$|[^?#]+\.bmp$/);
+	if (image_input.search(image_re) == 0 ){
+		new_image = $('#image').val() + '/////' + image_input;
+		$('#image').val(new_image);
+		image_number = $('#image').val().split('/////').length -1;
+		push_image(image_input, image_number);
+		if (image_number >= 9){
+			$('#add_image').hide();
+			$('#add_image_button').hide();
+		}
+	}
+	else{
+		alert('Invalid image.');
+	}
+}
+$('#add_video_button')[0].onclick = function(){
+	video_input = $('#add_video').val();
+	video_re = RegExp(/[^?#]+\.mp4$|[^?#]+\.flv$|[^?#]+\.ogg$/);
+	if (video_input.search(video_re) == 0 ){
+		new_video = $('#video').val() + '/////' + video_input;
+		$('#video').val(new_video);
+		video_number = $('#video').val().split('/////').length -1;
+		push_video(video_input, video_number);
+		if (video_number >= 1){
+			$('#add_video').hide();
+			$('#add_video_button').hide();
+		}
+	}
+	else{
+		alert('Invalid video.');
+	}
+}
+$('#add_audio_button')[0].onclick = function(){
+	audio_input = $('#add_audio').val();
+	audio_re = RegExp(/[^?#]+\.mp3$|[^?#]+\.wav$|[^?#]+\.ogg$/);
+	if (audio_input.search(audio_re) == 0 ){
+		new_audio = $('#audio').val() + '/////' + audio_input;
+		$('#audio').val(new_audio);
+		audio_number = $('#audio').val().split('/////').length -1;
+		push_audio(audio_input, audio_number);
+		if (audio_number >= 1){
+			$('#add_audio').hide();
+			$('#add_audio_button').hide();
+		}
+	}
+	else{
+		alert('Invalid audio.');
+	}
+}
+</script>
+{% endblock %}
+
+

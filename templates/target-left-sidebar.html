@@ -3,7 +3,7 @@
                 <div class="thumbnail" style="width:100%;">
                 	<img src={% if target_user.userdetail.image %}{{target_user.userdetail.image}}{% else %}"{{ STATIC_URL }}images/avatar.jpg"{% endif %} width='100%' alt="...">
                 	<div class="caption">
-                		<h3>{{ target_user.userdetail.nickname }}</h3>
+                		<h3>{{ target_user.userdetail.nickname|safe }}</h3>
                 		<p>{{ target_user.userdetail.self_describe }}</p>
                 		<p><a href="/u/{{target_user.id}}/following" class="btn btn-default" role="button">关注{{ target_user.following.count }}</a></p>
                 		<p><a href="/u/{{target_user.id}}/follower" class="btn btn-default" role="button">粉丝{{ target_user.follower.count }}</a></p>
