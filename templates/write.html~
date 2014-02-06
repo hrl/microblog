@@ -10,9 +10,42 @@
 	{% if form.errors %}
 	<div class="alert alert-danger"><strong>Error:</strong> {{ form.errors }} </div>
 	{% endif %}
+	
+	<div id="posts" class="row WB_box" style="margin:0;">
+		<div class="col-sm-offset-1 col-sm-10">
+			<div class="row WB_main" style="margin:0;">
+				<div class="col-sm-2 WB_face">
+						<img src={{ user.post.all.2.user.userdetail.image }} width="100%">
+				</div>
+				<div class="col-sm-10 WB_detail">
+					<div class="WB_poster">
+						<a href="/u/{{ user.post.all.2.user.id }}">{{ user.post.all.2.user.userdetail.nickname | safe }}:</a>
+					</div>
+					<div class="WB_body">
+						<p>{{ user.post.all.2.encoded_body | safe }}</p>
+					</div>
+					<div class="WB_func">
+						<div class="WB_date">
+							{{ user.post.all.2.date | date:"Y-m-d h:m:s" }}
+						</div>
+						<div class="WB_fix">
+							<a href="#">赞</a> | 
+							<a href="#">转发</a> | 
+							<a href="#">收藏</a> | 
+							<a href="#">评论</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<p>{{ user.post.all.2.encoded_body | safe }}</p>
-	<p>{{ user.post.all.2.topic.all.0.name | safe }}</p>
+<!-- 
+			<script type="text/javascript">
+			$('#1')[0].onclick = function(){$('#1').hide();$('#post-6-image-carousel').show()}
+			</script>
+-->
+
 
 	<form role="form" action="" method=post>
 
@@ -29,8 +62,8 @@
     		<label for="add_image" class="control-label">添加图片</label>
 				<p style="margin:0px;" id="image_line1"></p>
 				<p style="margin:0px;" id="image_line2"></p>
-				<p id="image_line3"></p>
-    		<div class="form-inline">
+				<p style="margin:0px;" id="image_line3"></p>
+    		<div class="row form-inline" style="margin:10px 0 0 0;">
 					<div class="col-sm-11" style="padding:0;">
       			<input type="text" class="form-control" id="add_image" name="add_image">
 					</div>
@@ -43,7 +76,7 @@
 			<div class="form-group">
     		<label for="add_video" class="control-label">添加视频</label>
 				<p style="margin:0px;" id="video_line"></p>
-    		<div class="form-inline">
+    		<div class="row form-inline" style="margin:10px 0 0 0;">
 					<div class="col-sm-11" style="padding:0;">
       			<input type="text" class="form-control" id="add_video" name="add_video">
 					</div>
@@ -57,7 +90,7 @@
 			<div class="form-group">
     		<label for="add_audio" class="control-label">添加音频</label>
 				<p style="margin:0px;" id="audio_line"></p>
-    		<div class="form-inline">
+    		<div class="row form-inline" style="margin:10px 0 0 0;">
 					<div class="col-sm-11" style="padding:0;">
       			<input type="text" class="form-control" id="add_audio" name="add_audio">
 					</div>
@@ -69,11 +102,6 @@
 
 		</div>
 		
-		{% if repo %}
-    <input type="hidden" id="repo" name="repo" value="{{ repo }}">
-		{% else %}
-		<input type="hidden" id="repo" name="repo" value="">
-		{% endif %}
 		<input type="hidden" id="image" name="image" value="">
 		<input type="hidden" id="audio" name="audio" value="">
 		<input type="hidden" id="video" name="video" value="">
@@ -87,95 +115,7 @@
 
 
 {% block script %}
-<script type="text/javascript">
-var add_error = new Array()
-function push_image(image_url, image_number){
-	switch (Math.ceil(image_number/3)){
-		case 1:
-			image_line = $('#image_line1').html() + '<img src="' + image_url +'" class="img-thumbnail">';
-			$('#image_line1').html(image_line);
-			break;
-		case 2:
-			image_line = $('#image_line2').html() + '<img src="' + image_url +'" class="img-thumbnail">';
-			$('#image_line2').html(image_line);
-			break;
-		case 3:
-			image_line = $('#image_line3').html() + '<img src="' + image_url +'" class="img-thumbnail">';
-			$('#image_line3').html(image_line);
-			break;
-	}
-}
-
-function push_video(video_url, video_number){
-	switch (Math.ceil(video_number/1)){
-		case 1:
-			video_line = $('#video_line').html() + '<video src="' + video_url +'"  width="320" height="240" controls="controls"></video>';
-			$('#video_line').html(video_line);
-			break;
-	}
-}
-
-function push_audio(audio_url, audio_number){
-	switch (Math.ceil(audio_number/1)){
-		case 1:
-			audio_line = $('#audio_line').html() + '<audio src="' + audio_url +'" controls="controls"></audio>';
-			$('#audio_line').html(audio_line);
-			break;
-	}
-}
-
-$('#add_image_button')[0].onclick = function(){
-	image_input = $('#add_image').val();
-	image_re = RegExp(/[^?#]+\.jpeg$|[^?#]+\.jpg$|[^?#]+\.png$|[^?#]+\.bmp$/);
-	if (image_input.search(image_re) == 0 ){
-		new_image = $('#image').val() + '/////' + image_input;
-		$('#image').val(new_image);
-		image_number = $('#image').val().split('/////').length -1;
-		push_image(image_input, image_number);
-		if (image_number >= 9){
-			$('#add_image').hide();
-			$('#add_image_button').hide();
-		}
-	}
-	else{
-		alert('Invalid image.');
-	}
-}
-$('#add_video_button')[0].onclick = function(){
-	video_input = $('#add_video').val();
-	video_re = RegExp(/[^?#]+\.mp4$|[^?#]+\.flv$|[^?#]+\.ogg$/);
-	if (video_input.search(video_re) == 0 ){
-		new_video = $('#video').val() + '/////' + video_input;
-		$('#video').val(new_video);
-		video_number = $('#video').val().split('/////').length -1;
-		push_video(video_input, video_number);
-		if (video_number >= 1){
-			$('#add_video').hide();
-			$('#add_video_button').hide();
-		}
-	}
-	else{
-		alert('Invalid video.');
-	}
-}
-$('#add_audio_button')[0].onclick = function(){
-	audio_input = $('#add_audio').val();
-	audio_re = RegExp(/[^?#]+\.mp3$|[^?#]+\.wav$|[^?#]+\.ogg$/);
-	if (audio_input.search(audio_re) == 0 ){
-		new_audio = $('#audio').val() + '/////' + audio_input;
-		$('#audio').val(new_audio);
-		audio_number = $('#audio').val().split('/////').length -1;
-		push_audio(audio_input, audio_number);
-		if (audio_number >= 1){
-			$('#add_audio').hide();
-			$('#add_audio_button').hide();
-		}
-	}
-	else{
-		alert('Invalid audio.');
-	}
-}
-</script>
+<script src='/static/js/write.js'></script>
 {% endblock %}
 
 

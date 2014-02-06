@@ -20,6 +20,7 @@ from mblog.views import following
 from mblog.views import follower
 from mblog.views import follow
 from mblog.views import write
+from mblog.views import get_post
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -34,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^u/(\d+)/follower$', follower),
     url(r'^follow$', follow),
     url(r'^write$', write),
+    url(r'^get/post$', get_post),
     url(r'^time/plus/(\d{1,2})/$', hours_ahead),
     url(r'^hello/$', hello),
     url(r'^show/$', display_meta),

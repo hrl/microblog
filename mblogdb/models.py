@@ -15,6 +15,14 @@ class UserDetail(models.Model):
     def __unicode__(self):
         return self.nickname
 
+    def check_follow(self, target_user):
+        if Follow.objects.filter(user=self.user,
+                                 follow=target_user).count():
+            return True
+        else:
+            return False
+
+
 class Follow(models.Model):
     user = models.ForeignKey(User, related_name="following")
     # u = User()
@@ -46,8 +54,18 @@ class Post(models.Model):
     audio = models.TextField(blank=True)
     video = models.TextField(blank=True)
     topic = models.ManyToManyField(Topic, related_name="post")
+    like = models.ManyToManyField(User, related_name="like_post")
     date = models.DateTimeField()
     is_active = models.BooleanField()
+
+    def get_image(self):
+        return self.image.split('/////')[1:]
+
+    def get_video(self):
+        return self.video.split('/////')[1:]
+
+    def get_audio(self):
+        return self.audio.split('/////')[1:]
 
 class Comment(models.Model):
     post = models.OneToOneField(Post, related_name="comment")
@@ -55,6 +73,7 @@ class Comment(models.Model):
                              blank=True, null=True)
     user = models.ForeignKey(User, related_name="comment")
     body = models.TextField()
+    like = models.ManyToManyField(User, related_name="like_comment")
     date = models.DateTimeField()
     is_active = models.BooleanField()
 

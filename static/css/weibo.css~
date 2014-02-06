@@ -1,0 +1,65 @@
+/*    
+
+|--------------------WB_box----------------------|
+|                                                |
+| |-----------------WB_main--------------------| |
+| |                                            | |
+| | |---------|  |--------WB_detail----------| | |
+| | |         |  | |------WB_poster--------| | | |
+| | | WB_face |  | |------ WB_body --------| | | |
+| | |         |  | |------ WB_func --------| | | |
+| | |---------|  |---------------------------| | |
+| |                                            | |
+| |--------------------------------------------| |
+|                                                |
+|------------------------------------------------|
+
+|------ WB_func --------|
+|WB_date          WB_fix|
+|-----------------------|
+
+*/
+
+.WB_box {
+	padding-top:20px;
+}
+
+.WB_main {
+	padding-bottom:10px;
+	border-bottom:1px solid #eeeeee;
+}
+
+.WB_face {
+
+}
+
+.WB_detail {
+
+}
+
+.WB_poster {
+
+}
+
+.WB_body {
+
+}
+
+.WB_func {
+	margin-top:10px;
+}
+
+.WB_date {
+	float:left;
+}
+
+.WB_fix {
+	float:right;
+}
+
+.post-img-thumbnail{
+	padding:3px;
+	border: 1px solid #ddd;
+	max-width: 100%;
+	border-radius: 4px;
+}

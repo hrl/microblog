@@ -1,0 +1,106 @@
+	<div class="row WB_box" style="margin:0;">
+		<div class="col-sm-offset-1 col-sm-10">
+			<div class="row WB_main" style="margin:0;">
+				<div class="col-sm-2 WB_face">
+						<img src={{ post.user.userdetail.image }} width="100%">
+				</div>
+				<div class="col-sm-10 WB_detail">
+					<div class="WB_poster">
+						<a href="/u/{{ post.user.id }}">{{ post.user.userdetail.nickname | safe }}:</a>
+					</div>
+					<div class="WB_body">
+						{{ post.encoded_body | safe }}
+						
+						<!-- show_image  -->
+						{% if post.get_image %}
+						{% jinja %}
+						<div class="row" style="margin:10px 0 0 0;">
+						{% for i in range( post.get_image()|length ) %}
+						<div class="col-sm-4 post-img-thumbnail">
+							<center><img id="post-{{post.id}}-image-thumbnail-{{i}}" src={{ post.get_image()[i] }}></center>
+						</div>
+						{% endfor %}
+						</div>
+						{% endjinja %}
+
+      			<div id="post-{{post.id}}-image-carousel" class="carousel slide" style="display:none;" data-ride="carousel" data-interval=false>
+        			<ol class="carousel-indicators">
+								{% jinja %}
+									{% for i in range( post.get_image()|length ) %}
+										{% if i == 0 %}
+										<li data-target="#post-{{post.id}}-image-carousel" data-slide-to={{i}} class="active"></li>
+										{% else %}
+										<li data-target="#post-{{post.id}}-image-carousel" data-slide-to={{i}} class=""></li>
+										{% endif %}
+									{% endfor %}
+								{% endjinja %}
+			        </ol>
+ 			       <div class="carousel-inner">
+								{% jinja %}
+									{% for i in range( post.get_image()|length ) %}
+										{% if i == 0 %}
+										<div class="item active">
+											<img id="post-{{post.id}}-image-carousel-{{i}}" width="100%" src={{ post.get_image()[i] }}>
+    			      		</div>
+										{% else %}
+										<div class="item">
+											<img id="post-{{post.id}}-image-carousel-{{i}}" width="100%" src={{ post.get_image()[i] }}>
+    			      		</div>
+										{% endif %}
+									{% endfor %}
+								{% endjinja %}
+       			 </div>
+        			<a class="left carousel-control" href="#post-{{post.id}}-image-carousel" data-slide="prev">
+          			<span class="glyphicon glyphicon-chevron-left"></span>
+        			</a>
+							<a class="right carousel-control" href="#post-{{post.id}}-image-carousel" data-slide="next">
+        			  <span class="glyphicon glyphicon-chevron-right"></span>
+							</a>
+						</div>
+						{% endif %}
+						<!-- end show_image  -->
+
+						<!-- show_video  -->
+						{% if post.get_video %}
+						{% jinja %}
+						<div class="row" style="margin:10px 0 0 0;">
+						{% for i in range( post.get_video()|length ) %}
+						<div class="col-sm-12">
+							<video src={{ post.get_video()[i] }} width="100%" controls="controls"></video>
+						</div>
+						{% endfor %}
+						</div>
+						{% endjinja %}
+						{% endif %}
+						<!-- end show_video  -->
+
+						<!-- show_audio  -->
+						{% if post.get_audio %}
+						{% jinja %}
+						<div class="row" style="margin:10px 0 0 0;">
+						{% for i in range( post.get_audio()|length ) %}
+						<div class="col-sm-12">
+							<audio src={{ post.get_audio()[i] }} width="100%" controls="controls"></audio>
+						</div>
+						{% endfor %}
+						</div>
+						{% endjinja %}
+						{% endif %}
+						<!-- end show_audio  -->
+
+					</div>
+					<div class="WB_func">
+						<div class="WB_date">
+							{{ post.date | date:"Y-m-d h:m:s" }}
+						</div>
+						<div class="WB_fix">
+							<a href="#">赞</a> | 
+							<a href="#">转发</a> | 
+							<a href="#">收藏</a> | 
+							<a href="#">评论</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

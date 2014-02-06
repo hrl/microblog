@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render_to_response
 from mblogdb.models import UserDetail
 import datetime
@@ -21,7 +22,8 @@ from django.contrib.auth.decorators import login_required
 from math import ceil
 
 def get_time():
-    return unicode(datetime.datetime.now())[:19]
+    return datetime.datetime.now()
+    #return unicode(datetime.datetime.now())[:19]
 
 def inform(user_id, inform_type, body):
     user_id = int(user_id)
@@ -205,17 +207,21 @@ def follower(request, uid):
 
 def follow(request):
     try:
+        action = request.GET['action']
         target_user = User.objects.filter(id=int(request.GET['uid'])).get()
         user = request.user
         now = get_time()
         assert user != target_user
-        assert Follow.objects.filter(user=user, follow=target_user).count() == 0
-        following = Follow(user=user, follow=target_user, date=now)
-        following.save()
+        if action == 'follow':
+            assert Follow.objects.filter(user=user, follow=target_user).count() == 0
+            following = Follow(user=user, follow=target_user, date=now)
+            following.save()
+        elif action == 'unfollow':
+            following = Follow.objects.filter(user=user, follow=target_user).get()
+            following.delete()
         return HttpResponse('success')
     except:
-        raise
-        return HttpResponse('fail')
+        raise Http404
 
 # write microblog
 def convert_at_link(nickname):
@@ -262,7 +268,6 @@ def link_topicid_post(topicid, post):
     post.save()
 
 class WriteForm(forms.Form):
-    repo = forms.IntegerField(required=False)
     body = forms.CharField(max_length=140)
     image = forms.CharField(required=False)
     audio = forms.CharField(required=False)
@@ -310,20 +315,14 @@ def write(request):
         form = WriteForm(request.POST)
         if form.is_valid():
             cdata = form.cleaned_data
-            try:
-                repo = int(cdata['repo'])
-            except:
-                repo = None
             body = cdata['body']
             image = cdata.get('image', '')
             audio = cdata.get('video', '')
             video = cdata.get('video', '')
-            raise
 
             safe_body = text_handle(body, 'post')
 
             new_post = Post(user=request.user,
-                            repo=repo,
                             body=body,
                             encoded_body=safe_body,
                             image=image,
@@ -347,6 +346,24 @@ def write(request):
     return render_to_response("write.html",
                               {'form': form},
                               context_instance=RequestContext(request))
+
+# get post
+def get_post(request):
+    try:
+        data_type = request.GET['datatype']
+        post_id = request.GET['postid']
+        post = Post.objects.get(id=post_id)
+
+        if data_type == "html":
+            return render_to_response("api/get_post.html",
+                                      {'post':post},
+                                      context_instance=RequestContext(request))
+        elif data_type == "javascript":
+            return render_to_response("api/get_post.js",
+                                      {'post':post},
+                                      context_instance=RequestContext(request))
+    except:
+        raise
 
 def main(request):
     return render_to_response("main.html", context_instance=RequestContext(request))
