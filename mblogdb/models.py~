@@ -13,11 +13,10 @@ class UserDetail(models.Model):
     sexual_orientation = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
-        return self.nickname
+        return unicode(self.nickname)
 
-    def check_follow(self, uid):
-        target_user = User.objects.get(id=uid)
-        if Follow.objects.filter(user=user,
+    def check_follow(self, target_user):
+        if Follow.objects.filter(user=self.user,
                                  follow=target_user).count():
             return True
         else:
@@ -39,11 +38,14 @@ class Follow(models.Model):
 
     date = models.DateTimeField()
 
+    def __unicode__(self):
+        return unicode(self.user)
+
 class Topic(models.Model):
     name = models.CharField(max_length=140)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.name)
 
 class Post(models.Model):
     user = models.ForeignKey(User, related_name="post")
@@ -54,10 +56,14 @@ class Post(models.Model):
     image = models.TextField(blank=True)
     audio = models.TextField(blank=True)
     video = models.TextField(blank=True)
-    topic = models.ManyToManyField(Topic, related_name="post")
-    like = models.ManyToManyField(User, related_name="like_post")
+    topic = models.ManyToManyField(Topic, related_name="post", blank=True)
+    like = models.ManyToManyField(User, related_name="like_post", blank=True)
+    collect = models.ManyToManyField(User, related_name="collect_post", blank=True)
     date = models.DateTimeField()
     is_active = models.BooleanField()
+
+    def __unicode__(self):
+        return unicode(self.id)
 
     def get_image(self):
         return self.image.split('/////')[1:]
@@ -69,14 +75,19 @@ class Post(models.Model):
         return self.audio.split('/////')[1:]
 
 class Comment(models.Model):
-    post = models.OneToOneField(Post, related_name="comment")
+    post = models.ForeignKey(Post, related_name="comment")
     reco = models.ForeignKey('self', related_name="recoed",
                              blank=True, null=True)
     user = models.ForeignKey(User, related_name="comment")
     body = models.TextField()
-    like = models.ManyToManyField(User, related_name="like_comment")
+    encoded_body = models.TextField()
+    like = models.ManyToManyField(User, related_name="like_comment", blank=True)
+    collect = models.ManyToManyField(User, related_name="collect_comment", blank=True)
     date = models.DateTimeField()
     is_active = models.BooleanField()
+
+    def __unicode__(self):
+        return unicode(self.id)
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="message_send")
@@ -89,6 +100,9 @@ class Message(models.Model):
     date = models.DateTimeField()
     is_active = models.BooleanField()
 
+    def __unicode__(self):
+        return unicode(self.recipient)
+
 class InformPool(models.Model):
     "new @/Message : send to InformPool; read information: clean InformPool"
     user = models.ForeignKey(User, related_name="information")
@@ -96,16 +110,11 @@ class InformPool(models.Model):
     inform_type = models.IntegerField()
     # 0:post
     # 1:comment
-    # 2:Message
+    # 2:repost
+    # 3:Message
 
     body = models.TextField()
     date = models.DateTimeField()
 
-class Collect(models.Model):
-    user = models.ForeignKey(User, related_name="collection")
-    # u = User()
-    # u.collention.count() -> the number of posts that u is collecting
-
-    post = models.ForeignKey(Post, related_name="collector")
-    # p = Post()
-    # p.collector.count() -> the number of people that is collecting p
+    def __unicode__(self):
+        return unicode(self.user)

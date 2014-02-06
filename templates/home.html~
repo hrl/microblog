@@ -23,6 +23,9 @@ function unfollow(){
 	$.get('/follow?uid={{target_user.id}}&action=unfollow', function(data, status){
 		$('#follow-{{target_user.id}}').show();
 		$('#unfollow-{{target_user.id}}').hide();
+		follower = Number($('#follower-{{target_user.id}}').text().substr(2));
+		follower -= 1;
+		$('#follower-{{target_user.id}}').text('粉丝'+String(follower));
 	})
 }
 

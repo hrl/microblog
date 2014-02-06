@@ -1,0 +1,85 @@
+{% extends 'index.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block contain %}
+<div class="col-sm-9">
+
+	<div id="posts" class="row WB_box" style="margin:0;">
+	</div>
+
+	<div id="posts" class="row" style="margin:0;">
+	<div class="col-sm-offset-1 col-sm-10">
+	<!-- comment_area -->
+	<div id="comment_area" class="row COMMENT_area" style="margin:10px 0;">
+		<div class="col-sm-offset-2 col-sm-10">
+			<!-- submit_comment -->
+			<div class="row COMMENT_submit" style="margin:10px 0 0 0;">
+				<form role="form" action="/comment" method=post>
+					<div>
+						<!-- body -->
+						<div class="form-group">
+    					<label for="body" class="control-label">评论</label>
+    					<div>
+    			  		<textarea class="form-control" id="body" name="body" rows="2" autofocus required></textarea>
+    					</div>
+						</div>
+						<!-- end body -->
+					</div>
+					<input type="hidden" id="post_id" name="post_id" value={{post.id}}>
+					<input type="hidden" id="reco_id" name="reco_id" value={{post.id}}>
+					<button class="btn btn-primary btn-lg btn-block" style="margin-top:10px;" type="submit">发布</button>
+					{% csrf_token %}
+				</form>
+			</div>
+			<!-- end submit_comment -->
+
+			<!-- comments -->
+			<div id="comments" class="row COMMENT_box" style="margin:10px 0;">
+				{% for comment in post.comment.all %}
+					<div class="row COMMENT_main" style="margin:10px 0;">
+						<div class="col-sm-1 COMMENT_face">
+							<img width="100%" src={{comment.user.userdetail.image}} href="/u/{{comment.user.id}}">
+						</div>
+						<div class="col-sm-11 COMMENT_detail">
+							<div class="row COMMENT_body" style="margin:0;">
+								<a href="/u/{{comment.user.id}}">{{comment.user.userdetail.nickname|safe}}</a>:{{comment.encoded_body|safe}}
+								<span class="COMMENT_date">({{comment.date|date:"m-d h:m"}})</span>
+							</div>
+							<div class="row COMMENT_func" style="margin:10px 0;">
+								<div class="COMMENT_fix">
+									<a id="comment-{{comment.id}}-like" {% if user in comment.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{comment.like.count}})</a>
+									<a id="comment-{{comment.id}}-unlike" {% if user not in comment.like.all %}style="display:none;"{% endif %} href="javascript:;">取消赞({{comment.like.count}})</a> | 
+									<a id="comment-{{comment.id}}-reply" href="javascript:;">回复</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<!-- end comments -->
+		</div>
+	</div>
+	<!-- end comment_area -->
+	</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+	insert_post({{post.id}}, 'posts')
+
+	{% for comment in post.comment.all %}
+		$('#comment-{{comment.id}}-like')[0].onclick = function(){like('comment-{{comment.id}}-like', "comment-{{comment.id}}-unlike", "comment", {{comment.id}});}
+		$('#comment-{{comment.id}}-unlike')[0].onclick = function(){unlike('comment-{{comment.id}}-like', "comment-{{comment.id}}-unlike", "comment", {{comment.id}});}
+		$('#comment-{{comment.id}}-reply')[0].onclick = function(){reply("{{comment.id}}", "{{comment.user.userdetail.nickname|safe}}")}
+	{% endfor %}
+</script>
+{% endblock %}
+
+

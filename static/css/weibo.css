@@ -8,6 +8,7 @@
 | | |         |  | |------WB_poster--------| | | |
 | | | WB_face |  | |------ WB_body --------| | | |
 | | |         |  | |------ WB_func --------| | | |
+| | |         |  | |------ WB_repo --------| | | |
 | | |---------|  |---------------------------| | |
 | |                                            | |
 | |--------------------------------------------| |
@@ -17,6 +18,8 @@
 |------ WB_func --------|
 |WB_date          WB_fix|
 |-----------------------|
+
+|------ WB_repo --------| ==> |--------WB_detail----------|
 
 */
 
@@ -63,4 +66,45 @@
 	max-width: 100%;
 	border-radius: 4px;
 	overflow: hidden;
+}
+
+.post-repo-img-thumbnail{
+	padding:3px;
+	border: 1px solid #ddd;
+	max-width: 100%;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.WB_repo {
+	background-color:#eeeeee;
+	padding:5px;
+	border:1px;
+	border-radius:5px;
+}
+
+.COMMENT_box{
+
+}
+
+.COMMENT_submit {
+	padding-bottom:10px;
+	border-bottom:1px solid #eeeeee;
+}
+
+.COMMENT_main {
+	padding-bottom:10px;
+	border-bottom:1px solid #eeeeee;
+}
+
+.COMMENT_face{
+	padding:0;
+}
+
+.COMMENT_date{
+	color:#808080;
+}
+
+.COMMENT_fix {
+	float:right;
 }

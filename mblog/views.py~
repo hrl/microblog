@@ -30,7 +30,8 @@ def inform(user_id, inform_type, body):
     user = User.objects.filter(id=user_id).get()
     type_dict = {'post': 0,
                  'comment': 1,
-                 'message': 2}
+                 'repo': 2,
+                 'message': 3}
     inform_type = type_dict[inform_type]
     new_inform = InformPool(user=user,
                             inform_type=inform_type,
@@ -246,7 +247,6 @@ def convert_topic_link(topic):
     return link
 
 def text_handle(text, text_type):
-    text = unicode(Markup.escape(text))
 
     # @user
     text = re.sub(r'@[^@]+? ',
@@ -317,14 +317,15 @@ def write(request):
             cdata = form.cleaned_data
             body = cdata['body']
             image = cdata.get('image', '')
-            audio = cdata.get('video', '')
+            audio = cdata.get('audio', '')
             video = cdata.get('video', '')
 
-            safe_body = text_handle(body, 'post')
+            safe_body = unicode(Markup.escape(body))
+            encoded_body = text_handle(safe_body, 'post')
 
             new_post = Post(user=request.user,
-                            body=body,
-                            encoded_body=safe_body,
+                            body=safe_body,
+                            encoded_body=encoded_body,
                             image=image,
                             audio=audio,
                             video=video,
@@ -341,11 +342,93 @@ def write(request):
             re.sub(r"href='/u/\d+'",
                    lambda x: inform(x.group(0)[9:-1], 'post', new_post.id),
                    safe_body)
+            return HttpResponseRedirect(u'/post/'+unicode(new_post.id))
     else:
         form = WriteForm()
     return render_to_response("write.html",
                               {'form': form},
                               context_instance=RequestContext(request))
+
+@login_required(login_url="/login")
+def repo(request, post_id):
+    repo = Post.objects.get(id=post_id)
+    if request.method == "POST":
+        form = WriteForm(request.POST)
+        if form.is_valid():
+            cdata = form.cleaned_data
+            body = cdata['body']
+
+            safe_body = unicode(Markup.escape(body))
+            encoded_body = text_handle(safe_body, 'post')
+
+
+            new_post = Post(user=request.user,
+                            repo=repo,
+                            body=safe_body,
+                            encoded_body=encoded_body,
+                            date=get_time(),
+                            is_active=True)
+            new_post.save()
+
+            # link topic post
+            re.sub(r"href='/t/\d+'",
+                   lambda x: link_topicid_post(x.group(0)[9:-1], new_post),
+                   encoded_body)
+
+            # inform @
+            re.sub(r"href='/u/\d+'",
+                   lambda x: inform(x.group(0)[9:-1], 'post', new_post.id),
+                   encoded_body)
+
+            # inform repo
+            inform(repo.user, 'repo', new_post.id)
+
+            return HttpResponseRedirect(u'/post/'+unicode(new_post.id))
+    else:
+        form = WriteForm()
+    return render_to_response("repo.html",
+                              {'form': form, 'repo': repo},
+                              context_instance=RequestContext(request))
+
+# comment
+class CommentFrom(forms.Form):
+    post_id = forms.IntegerField()
+    reco_id = forms.IntegerField(required=False)
+    body = forms.CharField(max_length=140)
+
+@login_required(login_url="/login")
+def comment(request):
+    if request.method == "POST":
+        form = CommentFrom(request.POST)
+        if form.is_valid():
+            cdata = form.cleaned_data
+            body = cdata['body']
+            post_id = int(cdata['post_id'])
+            reco_id = cdata['reco_id']
+
+            safe_body = unicode(Markup.escape(body))
+            encoded_body = text_handle(safe_body, 'comment')
+
+            post = Post.objects.get(id=post_id)
+            try:
+                reco = Comment.objects.get(id=reco_id)
+            except:
+                reco = None
+
+            new_comment = Comment(post=post,
+                                  user=request.user,
+                                  reco=reco,
+                                  body=safe_body,
+                                  encoded_body=encoded_body,
+                                  date=get_time(),
+                                  is_active=True)
+            new_comment.save()
+
+            # inform @
+            re.sub(r"href='/u/\d+'",
+                   lambda x: inform(x.group(0)[9:-1], 'comment', new_comment.id),
+                   encoded_body)
+            return HttpResponseRedirect(u'/post/'+unicode(post.id)+'#comment_area')
 
 # get post
 def get_post(request):
@@ -364,6 +447,75 @@ def get_post(request):
                                       context_instance=RequestContext(request))
     except:
         raise
+
+# show post page
+def post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    if post.user == request.user:
+        target_user = None
+    else:
+        target_user = post.user
+    return render_to_response("post.html",
+                              {'post': post, 'target_user': target_user},
+                              context_instance=RequestContext(request))
+
+# like
+def like(request):
+    try:
+        action = request.GET['action']
+        target_type = request.GET['targettype']
+        target_id = request.GET['targetid']
+
+        if target_type == "post":
+            post = Post.objects.get(id=target_id)
+            if action == 'like':
+                assert request.user not in post.like.all()
+                post.like.add(request.user)
+            elif action == 'unlike':
+                assert request.user in post.like.all()
+                post.like.remove(request.user)
+            post.save()
+        elif target_type == "comment":
+            comment = Comment.objects.get(id=target_id)
+            if action == "like":
+                assert request.user not in comment.like.all()
+                comment.like.add(request.user)
+            elif action == "unlike":
+                assert request.user not in comment.like.all()
+                comment.like.remove(request.user)
+            comment.save()
+        return HttpResponse('success')
+    except:
+        raise Http404
+
+# collect
+def collect(request):
+    try:
+        action = request.GET['action']
+        target_type = request.GET['targettype']
+        target_id = request.GET['targetid']
+
+        if target_type == "post":
+            post = Post.objects.get(id=target_id)
+            if action == 'collect':
+                assert request.user not in post.collect.all()
+                post.collect.add(request.user)
+            elif action == 'uncollect':
+                assert request.user in post.collect.all()
+                post.collect.remove(request.user)
+            post.save()
+        elif target_type == "comment":
+            comment = Comment.objects.get(id=target_id)
+            if action == "collect":
+                assert request.user not in comment.collect.all()
+                comment.collect.add(request.user)
+            elif action == "uncollect":
+                assert request.user not in comment.collect.all()
+                comment.collect.remove(request.user)
+            comment.save()
+        return HttpResponse('success')
+    except:
+        raise Http404
 
 def main(request):
     return render_to_response("main.html", context_instance=RequestContext(request))

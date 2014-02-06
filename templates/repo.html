@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block contain %}
+<div class="col-sm-9">
+
+	{% if form.errors %}
+	<div class="alert alert-danger"><strong>Error:</strong> {{ form.errors }} </div>
+	{% endif %}
+
+	<form role="form" action="" method=post>
+
+		<div>
+
+			<div class="form-group">
+    		<label for="body" class="control-label">转发微博</label>
+    		<div>
+      		<textarea class="form-control" id="body" name="body" rows="3" autofocus required>{% if repo.repo %}||@{{ repo.user.userdetail.nickname|safe }} :{{ repo.body|safe }}{% endif %}</textarea>
+    		</div>
+			</div><!-- body -->
+
+			<div id="posts" class="row WB_box" style="margin:0;">
+			</div>
+
+		</div>
+		
+		<input type="hidden" id="image" name="image" value="">
+		<input type="hidden" id="audio" name="audio" value="">
+		<input type="hidden" id="video" name="video" value="">
+
+		<button class="btn btn-primary btn-lg btn-block" style="margin-top:10px;" type="submit">发布</button>
+		{% csrf_token %}
+	</form>
+
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src='/static/js/write.js'></script>
+<script>
+	insert_post({{repo.id}}, 'posts')
+</script>
+{% endblock %}
+
+

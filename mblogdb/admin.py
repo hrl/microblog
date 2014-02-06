@@ -19,6 +19,11 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('id', 'user', 'body')
 admin.site.register(Post, PostAdmin)
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'reco', 'body', 'encoded_body', 'date', 'is_active')
+    search_fields = ('id', 'user', 'body')
+admin.site.register(Comment, CommentAdmin)
+
 class InformPoolAdmin(admin.ModelAdmin):
     list_display = ('user', 'inform_type', 'body', 'date')
     search_fields = ('user', 'inform_type')

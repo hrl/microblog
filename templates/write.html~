@@ -10,42 +10,6 @@
 	{% if form.errors %}
 	<div class="alert alert-danger"><strong>Error:</strong> {{ form.errors }} </div>
 	{% endif %}
-	
-	<div id="posts" class="row WB_box" style="margin:0;">
-		<div class="col-sm-offset-1 col-sm-10">
-			<div class="row WB_main" style="margin:0;">
-				<div class="col-sm-2 WB_face">
-						<img src={{ user.post.all.2.user.userdetail.image }} width="100%">
-				</div>
-				<div class="col-sm-10 WB_detail">
-					<div class="WB_poster">
-						<a href="/u/{{ user.post.all.2.user.id }}">{{ user.post.all.2.user.userdetail.nickname | safe }}:</a>
-					</div>
-					<div class="WB_body">
-						<p>{{ user.post.all.2.encoded_body | safe }}</p>
-					</div>
-					<div class="WB_func">
-						<div class="WB_date">
-							{{ user.post.all.2.date | date:"Y-m-d h:m:s" }}
-						</div>
-						<div class="WB_fix">
-							<a href="#">赞</a> | 
-							<a href="#">转发</a> | 
-							<a href="#">收藏</a> | 
-							<a href="#">评论</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-<!-- 
-			<script type="text/javascript">
-			$('#1')[0].onclick = function(){$('#1').hide();$('#post-6-image-carousel').show()}
-			</script>
--->
-
 
 	<form role="form" action="" method=post>
 

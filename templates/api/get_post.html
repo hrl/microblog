@@ -16,7 +16,7 @@
 						{% jinja %}
 						<div class="row" style="margin:10px 0 0 0;">
 						{% for i in range( post.get_image()|length ) %}
-						<div class="col-sm-4 post-img-thumbnail">
+						<div class="col-sm-4 post-img-thumbnail post-{{post.id}}-img-thumbnail">
 							<center><img id="post-{{post.id}}-image-thumbnail-{{i}}" src={{ post.get_image()[i] }}></center>
 						</div>
 						{% endfor %}
@@ -88,16 +88,123 @@
 						{% endif %}
 						<!-- end show_audio  -->
 
+						<!-- show_repo  -->
+						{% if post.repo %}
+						<div class="row WB_repo" style="margin:10px 0 0 0;">
+														<div class="col-sm-12 WB_detail">
+								<div class="WB_poster">
+									<a href="/u/{{ post.repo.user.id }}">@{{ post.repo.user.userdetail.nickname | safe }}:</a>
+								</div>
+								<div class="WB_body">
+									{{ post.repo.encoded_body | safe }}
+									
+									<!-- show_image  -->
+									{% if post.repo.get_image %}
+									{% jinja %}
+									<div class="row" style="margin:10px 0 0 0;">
+									{% for i in range( post.repo.get_image()|length ) %}
+									<div class="col-sm-4 post-repo-img-thumbnail post-repo-{{post.repo.id}}-img-thumbnail">
+										<center><img id="post-repo-{{post.repo.id}}-image-thumbnail-{{i}}" src={{ post.repo.get_image()[i] }}></center>
+									</div>
+									{% endfor %}
+									</div>
+									{% endjinja %}
+			
+      						<div id="post-repo-{{post.repo.id}}-image-carousel" class="carousel slide" style="display:none;" data-ride="carousel" data-interval=false>
+      			  			<ol class="carousel-indicators">
+											{% jinja %}
+												{% for i in range( post.repo.get_image()|length ) %}
+													{% if i == 0 %}
+													<li data-target="#post-repo-{{post.repo.id}}-image-carousel" data-slide-to={{i}} class="active"></li>
+													{% else %}
+													<li data-target="#post-repo-{{post.repo.id}}-image-carousel" data-slide-to={{i}} class=""></li>
+													{% endif %}
+												{% endfor %}
+											{% endjinja %}
+						        </ol>
+ 						       <div class="carousel-inner">
+											{% jinja %}
+												{% for i in range( post.repo.get_image()|length ) %}
+													{% if i == 0 %}
+													<div class="item active">
+														<img id="post-repo-{{post.repo.id}}-image-carousel-{{i}}" width="100%" src={{ post.repo.get_image()[i] }}>
+    						      		</div>
+													{% else %}
+													<div class="item">
+														<img id="post-repo-{{post.repo.id}}-image-carousel-{{i}}" width="100%" src={{ post.repo.get_image()[i] }}>
+    						      		</div>
+													{% endif %}
+												{% endfor %}
+											{% endjinja %}
+      			 			 </div>
+      			  			<a class="left carousel-control" href="#post-repo-{{post.repo.id}}-image-carousel" data-slide="prev">
+      			    			<span class="glyphicon glyphicon-chevron-left"></span>
+      			  			</a>
+										<a class="right carousel-control" href="#post-repo-{{post.repo.id}}-image-carousel" data-slide="next">
+      			  			  <span class="glyphicon glyphicon-chevron-right"></span>
+										</a>
+									</div>
+									{% endif %}
+									<!-- end show_image  -->
+			
+									<!-- show_video  -->
+									{% if post.repo.get_video %}
+									{% jinja %}
+									<div class="row" style="margin:10px 0 0 0;">
+									{% for i in range( post.repo.get_video()|length ) %}
+									<div class="col-sm-12">
+										<video src={{ post.repo.get_video()[i] }} width="100%" controls="controls"></video>
+									</div>
+									{% endfor %}
+									</div>
+									{% endjinja %}
+									{% endif %}
+									<!-- end show_video  -->
+	
+									<!-- show_audio  -->
+									{% if post.repo.get_audio %}
+									{% jinja %}
+									<div class="row" style="margin:10px 0 0 0;">
+									{% for i in range( post.repo.get_audio()|length ) %}
+									<div class="col-sm-12">
+										<audio src={{ post.repo.get_audio()[i] }} width="100%" controls="controls"></audio>
+									</div>
+									{% endfor %}
+									</div>
+									{% endjinja %}
+									{% endif %}
+									<!-- end show_audio  -->
+								</div>
+								<div class="WB_func">
+									<div class="WB_date">
+										{{ post.repo.date | date:"y-m-d h:m:s" }}
+									</div>
+									<div class="WB_fix">
+										<a id="post-repo-{{post.repo.id}}-like" {% if user in post.repo.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{post.repo.like.count}})</a>
+										<a id="post-repo-{{post.repo.id}}-unlike" {% if user not in post.repo.like.all %}style="display:none;"{% endif %} href="javascript:;">取消赞({{post.repo.like.count}})</a> | 
+										<a id="post-repo-{{post.repo.id}}-repo" href="/repo/{{post.repo.id}}">转发({{post.repo.repoed.count}})</a> | 
+										<a id="post-repo-{{post.repo.id}}-collect" {% if user in post.repo.collect.all %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.repo.collect.count}})</a>
+										<a id="post-repo-{{post.repo.id}}-uncollect" {% if user not in post.repo.collect.all %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.repo.collect.count}})</a> | 
+										<a id="post-repo-{{post.repo.id}}-comment" href="/post/{{post.repo.id}}#comment_area">评论({{post.repo.comment.count}})</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+						<!-- end show_repo  -->
+
 					</div>
 					<div class="WB_func">
 						<div class="WB_date">
-							{{ post.date | date:"Y-m-d h:m:s" }}
+							{{ post.date | date:"y-m-d h:m:s" }}
 						</div>
 						<div class="WB_fix">
-							<a href="#">赞</a> | 
-							<a href="#">转发</a> | 
-							<a href="#">收藏</a> | 
-							<a href="#">评论</a>
+							<a id="post-{{post.id}}-like" {% if user in post.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{post.like.count}})</a>
+							<a id="post-{{post.id}}-unlike" {% if user not in post.like.all %}style="display:none;"{% endif %} href="javascript:;">取消赞({{post.like.count}})</a> | 
+							<a id="post-{{post.id}}-repo" href="/repo/{{post.id}}">转发({{post.repoed.count}})</a> | 
+							<a id="post-{{post.id}}-collect" {% if user in post.collect.all %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.collect.count}})</a>
+							<a id="post-{{post.id}}-uncollect" {% if user not in post.collect.all %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.collect.count}})</a> | 
+							<a id="post-{{post.id}}-comment" href="/post/{{post.id}}#comment_area">评论({{post.comment.count}})</a>
 						</div>
 					</div>
 				</div>

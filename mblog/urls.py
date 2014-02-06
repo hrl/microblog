@@ -20,7 +20,12 @@ from mblog.views import following
 from mblog.views import follower
 from mblog.views import follow
 from mblog.views import write
+from mblog.views import repo
 from mblog.views import get_post
+from mblog.views import post
+from mblog.views import comment
+from mblog.views import like
+from mblog.views import collect
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -35,7 +40,12 @@ urlpatterns = patterns('',
     url(r'^u/(\d+)/follower$', follower),
     url(r'^follow$', follow),
     url(r'^write$', write),
+    url(r'^comment$', comment),
+    url(r'^post/(\d+)$', post),
+    url(r'^repo/(\d+)$', repo),
     url(r'^get/post$', get_post),
+    url(r'^like$', like),
+    url(r'^collect$', collect),
     url(r'^time/plus/(\d{1,2})/$', hours_ahead),
     url(r'^hello/$', hello),
     url(r'^show/$', display_meta),
