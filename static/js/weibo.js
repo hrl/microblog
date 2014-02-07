@@ -109,7 +109,7 @@ function uncollect(collect_id, uncollect_id, target_type, target_id){
 }
 
 function reply(comment_id, user_name){
-	text = $('#body').text() + '回复@' + user_name + ' :';
+	text = $('#body').text() + '回复@' + js.lang.String.decodeHtml(user_name) + ' :';
 	$('#body').text(text);
 	$('#reco_id').val(comment_id);
 }

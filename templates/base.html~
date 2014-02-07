@@ -34,6 +34,8 @@
         <script src='/static/js/bootstrap.js'></script>>
         <script src='/static/js/weibo.js'></script>>
 
+        {% block script_base %}
+        {% endblock %}
         {% block script %}
         {% endblock %}
     </body>

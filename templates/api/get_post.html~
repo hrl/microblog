@@ -177,7 +177,7 @@
 								</div>
 								<div class="WB_func">
 									<div class="WB_date">
-										{{ post.repo.date | date:"y-m-d h:m:s" }}
+										{{ post.repo.date | date:"y-m-d H:M:S" }}
 									</div>
 									<div class="WB_fix">
 										<a id="post-repo-{{post.repo.id}}-like" {% if user in post.repo.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{post.repo.like.count}})</a>
@@ -185,7 +185,7 @@
 										<a id="post-repo-{{post.repo.id}}-repo" href="/repo/{{post.repo.id}}">转发({{post.repo.repoed.count}})</a> | 
 										<a id="post-repo-{{post.repo.id}}-collect" {% if user in post.repo.collect.all %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.repo.collect.count}})</a>
 										<a id="post-repo-{{post.repo.id}}-uncollect" {% if user not in post.repo.collect.all %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.repo.collect.count}})</a> | 
-										<a id="post-repo-{{post.repo.id}}-comment" href="/post/{{post.repo.id}}">评论({{post.repo.comment.count}})</a>
+										<a id="post-repo-{{post.repo.id}}-comment" href="/post/{{post.repo.id}}#comment_area">评论({{post.repo.comment.count}})</a>
 									</div>
 								</div>
 							</div>
@@ -196,7 +196,7 @@
 					</div>
 					<div class="WB_func">
 						<div class="WB_date">
-							{{ post.date | date:"y-m-d h:m:s" }}
+							{{ post.date | date:"y-m-d H:i:s" }}
 						</div>
 						<div class="WB_fix">
 							<a id="post-{{post.id}}-like" {% if user in post.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{post.like.count}})</a>
@@ -204,7 +204,7 @@
 							<a id="post-{{post.id}}-repo" href="/repo/{{post.id}}">转发({{post.repoed.count}})</a> | 
 							<a id="post-{{post.id}}-collect" {% if user in post.collect.all %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.collect.count}})</a>
 							<a id="post-{{post.id}}-uncollect" {% if user not in post.collect.all %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.collect.count}})</a> | 
-							<a id="post-{{post.id}}-comment" href="/post/{{post.id}}">评论({{post.comment.count}})</a>
+							<a id="post-{{post.id}}-comment" href="/post/{{post.id}}#comment_area">评论({{post.comment.count}})</a>
 						</div>
 					</div>
 				</div>

@@ -89,6 +89,9 @@ class Comment(models.Model):
     def __unicode__(self):
         return unicode(self.id)
 
+    class Meta:
+        ordering = ['-date']
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="message_send")
     # u = User()
@@ -110,7 +113,7 @@ class InformPool(models.Model):
     inform_type = models.IntegerField()
     # 0:post
     # 1:comment
-    # 2:repost
+    # 2:repo
     # 3:Message
 
     body = models.TextField()

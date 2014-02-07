@@ -36,7 +36,7 @@ function push_audio(audio_url, audio_number){
 
 $('#add_image_button')[0].onclick = function(){
 	image_input = $('#add_image').val();
-	image_re = RegExp(/[^?#]+\.jpeg$|[^?#]+\.jpg$|[^?#]+\.png$|[^?#]+\.bmp$/);
+	image_re = RegExp(/[^'"?#]+\.jpeg$|[^'"?#]+\.jpg$|[^'"?#]+\.png$|[^'"?#]+\.bmp$/);
 	if (image_input.search(image_re) == 0 ){
 		new_image = $('#image').val() + '/////' + image_input;
 		$('#image').val(new_image);
@@ -53,7 +53,7 @@ $('#add_image_button')[0].onclick = function(){
 }
 $('#add_video_button')[0].onclick = function(){
 	video_input = $('#add_video').val();
-	video_re = RegExp(/[^?#]+\.mp4$|[^?#]+\.flv$|[^?#]+\.ogg$/);
+	video_re = RegExp(/[^'"?#]+\.mp4$|[^'"?#]+\.flv$|[^'"?#]+\.ogg$/);
 	if (video_input.search(video_re) == 0 ){
 		new_video = $('#video').val() + '/////' + video_input;
 		$('#video').val(new_video);
@@ -70,7 +70,7 @@ $('#add_video_button')[0].onclick = function(){
 }
 $('#add_audio_button')[0].onclick = function(){
 	audio_input = $('#add_audio').val();
-	audio_re = RegExp(/[^?#]+\.mp3$|[^?#]+\.wav$|[^?#]+\.ogg$/);
+	audio_re = RegExp(/[^'"?#]+\.mp3$|[^'"?#]+\.wav$|[^'"?#]+\.ogg$/);
 	if (audio_input.search(audio_re) == 0 ){
 		new_audio = $('#audio').val() + '/////' + audio_input;
 		$('#audio').val(new_audio);

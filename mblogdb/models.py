@@ -65,6 +65,9 @@ class Post(models.Model):
     def __unicode__(self):
         return unicode(self.id)
 
+    class Meta:
+        ordering = ['-date']
+
     def get_image(self):
         return self.image.split('/////')[1:]
 
@@ -88,6 +91,9 @@ class Comment(models.Model):
 
     def __unicode__(self):
         return unicode(self.id)
+
+    class Meta:
+        ordering = ['-date']
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="message_send")

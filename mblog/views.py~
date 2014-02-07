@@ -3,6 +3,7 @@ from django.http import Http404
 from django.shortcuts import render_to_response
 from mblogdb.models import UserDetail
 import datetime
+from dateutil.tz import tzlocal
 import re
 from flask import Markup
 
@@ -22,7 +23,7 @@ from django.contrib.auth.decorators import login_required
 from math import ceil
 
 def get_time():
-    return datetime.datetime.now()
+    return datetime.datetime.now(tzlocal())
     #return unicode(datetime.datetime.now())[:19]
 
 def inform(user_id, inform_type, body):
@@ -277,7 +278,7 @@ class WriteForm(forms.Form):
         cimage = self.cleaned_data['image']
         if len(cimage.split('/////')) > IMAGE_PER_POST+1:
             raise forms.ValidationError("Invalid input: too many images")
-        image_re = re.compile(r'[^?#]+\.jpeg$|[^?#]+\.jpg$|[^?#]+\.png$|[^?#]+\.bmp$')
+        image_re = re.compile(r'''[^'"?#]+\.jpeg$|[^'"?#]+\.jpg$|[^'"?#]+\.png$|[^'"?#]+\.bmp$''')
         for image_url in cimage.split('/////')[1:]:
             try:
                 assert image_url == re.search(image_re, image_url).group(0)
@@ -289,7 +290,7 @@ class WriteForm(forms.Form):
         caudio = self.cleaned_data['audio']
         if len(caudio.split('/////')) > AUDIO_PER_POST+1:
             raise forms.ValidationError("Invalid input: too many audios")
-        audio_re = re.compile(r'[^?#]+\.mp3$|[^?#]+\.wav$|[^?#]+\.ogg$')
+        audio_re = re.compile(r'''[^'"?#]+\.mp3$|[^'"?#]+\.wav$|[^'"?#]+\.ogg$''')
         for audio_url in caudio.split('/////')[1:]:
             try:
                 assert audio_url == re.search(audio_re, audio_url).group(0)
@@ -301,7 +302,7 @@ class WriteForm(forms.Form):
         cvideo = self.cleaned_data['video']
         if len(cvideo.split('/////')) > VIDEO_PER_POST+1:
             raise forms.ValidationError("Invalid input: too many videos")
-        video_re = re.compile(r'[^?#]+\.mp4$|[^?#]+\.flv$|[^?#]+\.ogg$')
+        video_re = re.compile(r'''[^'"?#]+\.mp4$|[^'"?#]+\.flv$|[^'"?#]+\.ogg$''')
         for video_url in cvideo.split('/////')[1:]:
             try:
                 assert video_url == re.search(video_re, video_url).group(0)

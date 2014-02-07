@@ -10,7 +10,7 @@
 	<div id="posts" class="row WB_box" style="margin:0;">
 	</div>
 
-	<div id="posts" class="row" style="margin:0;">
+	<div id="" class="row" style="margin:0;">
 	<div class="col-sm-offset-1 col-sm-10">
 	<!-- comment_area -->
 	<div id="comment_area" class="row COMMENT_area" style="margin:10px 0;">
@@ -38,7 +38,24 @@
 
 			<!-- comments -->
 			<div id="comments" class="row COMMENT_box" style="margin:10px 0;">
-				{% for comment in post.comment.all %}
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs">
+				{% jinja %}
+				{% set max_page = (post.comment.count()-1)/10|round(1, 'ceil')|int +1 %}
+				{% for page_id in range(1, (max_page+1)|int) %}
+				  <li class="{% if page_id|int == 1 %}active{% endif %}"><a href="#page-{{page_id}}" data-toggle="tab">{{page_id}}</a></li>
+				{% endfor %}
+				{% endjinja %}
+				</ul>
+				<!-- end Nav tabs -->
+
+				<!-- Tab panes -->
+				<div class="tab-content">	
+				{% jinja %}
+				{% for i in range(post.comment.count()) %}
+				{% set page_id = (i/10)|round(1, 'ceil')|int +1 %} 
+				{% set comment = post.comment.all()[i] %}
+					{% if i|string|list|last == '0' %}<div class="tab-pane {% if page_id|int == 1 %}active{% endif %}" id="page-{{page_id}}">{% endif %}
 					<div class="row COMMENT_main" style="margin:10px 0;">
 						<div class="col-sm-1 COMMENT_face">
 							<img width="100%" src={{comment.user.userdetail.image}} href="/u/{{comment.user.id}}">
@@ -46,18 +63,22 @@
 						<div class="col-sm-11 COMMENT_detail">
 							<div class="row COMMENT_body" style="margin:0;">
 								<a href="/u/{{comment.user.id}}">{{comment.user.userdetail.nickname|safe}}</a>:{{comment.encoded_body|safe}}
-								<span class="COMMENT_date">({{comment.date|date:"m-d h:m"}})</span>
+								<span class="COMMENT_date">({{comment.date.astimezone(tzlocal).strftime('%m-%d %H:%M')}})</span>
 							</div>
 							<div class="row COMMENT_func" style="margin:10px 0;">
 								<div class="COMMENT_fix">
-									<a id="comment-{{comment.id}}-like" {% if user in comment.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{comment.like.count}})</a>
-									<a id="comment-{{comment.id}}-unlike" {% if user not in comment.like.all %}style="display:none;"{% endif %} href="javascript:;">取消赞({{comment.like.count}})</a> | 
+									<a id="comment-{{comment.id}}-like" {% if user in comment.like.all() %}style="display:none;"{% endif %} href="javascript:;">赞({{comment.like.count()}})</a>
+									<a id="comment-{{comment.id}}-unlike" {% if user not in comment.like.all() %}style="display:none;"{% endif %} href="javascript:;">取消赞({{comment.like.count()}})</a> | 
 									<a id="comment-{{comment.id}}-reply" href="javascript:;">回复</a>
 								</div>
 							</div>
 						</div>
 					</div>
+					{% if i|string|list|last == '9' or loop.last %}</div>{% endif %}
 				{% endfor %}
+				{% endjinja %}
+				</div></div>
+				<!-- end Tab panes -->
 			</div>
 			<!-- end comments -->
 		</div>
