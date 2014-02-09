@@ -4,7 +4,7 @@
 <div class="col-sm-9">
 	<p>共有{{ target_user.follower.count }}人关注了{{ target_user.userdetail.nickname|safe }}</p>
 	{% for follower in follower_list %}
-		<p><a href="/u/{{ follower.user.id }}">{{ follower.user.userdetail.nickname }}</a></p>
+		<p><a href="/u/{{ follower.user.id }}">{{ follower.user.userdetail.nickname|safe }}</a></p>
 	{% endfor %}
 
 	{% jinja %}

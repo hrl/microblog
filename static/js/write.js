@@ -2,15 +2,15 @@ var add_error = new Array()
 function push_image(image_url, image_number){
 	switch (Math.ceil(image_number/3)){
 		case 1:
-			image_line = $('#image_line1').html() + '<img src="' + image_url +'" class="img-thumbnail">';
+			image_line = $('#image_line1').html() + '<div class="col-sm-4 post-img-thumbnail"><center><img id="image-' + image_number + '" src="'+image_url+'"></center></div>';
 			$('#image_line1').html(image_line);
 			break;
 		case 2:
-			image_line = $('#image_line2').html() + '<img src="' + image_url +'" class="img-thumbnail">';
+			image_line = $('#image_line2').html() + '<div class="col-sm-4 post-img-thumbnail"><center><img id="image-' + image_number + '" src="'+image_url+'"></center></div>';
 			$('#image_line2').html(image_line);
 			break;
 		case 3:
-			image_line = $('#image_line3').html() + '<img src="' + image_url +'" class="img-thumbnail">';
+			image_line = $('#image_line3').html() + '<div class="col-sm-4 post-img-thumbnail"><center><img id="image-' + image_number + '" src="'+image_url+'"></center></div>';
 			$('#image_line3').html(image_line);
 			break;
 	}
@@ -42,6 +42,9 @@ $('#add_image_button')[0].onclick = function(){
 		$('#image').val(new_image);
 		image_number = $('#image').val().split('/////').length -1;
 		push_image(image_input, image_number);
+		post_img_thumbnail_width = $('.post-img-thumbnail').width();
+		image_set_size("image-"+image_number, post_img_thumbnail_width);
+		$('.post-img-thumbnail').height(post_img_thumbnail_width);
 		if (image_number >= 9){
 			$('#add_image').hide();
 			$('#add_image_button').hide();

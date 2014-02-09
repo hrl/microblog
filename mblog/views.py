@@ -158,9 +158,6 @@ def password(request):
                               {'form':form},
                               context_instance=RequestContext(request))
 
-def home(request, uid):
-    pass
-
 def following(request, uid):
     target_user = User.objects.filter(id=uid).get()
 
@@ -435,16 +432,53 @@ def comment(request):
 def get_post(request):
     try:
         data_type = request.GET['datatype']
-        post_id = request.GET['postid']
-        post = Post.objects.get(id=post_id)
+        action = request.GET['action']
+
+        if action == 'post':
+            post_id = request.GET['postid']
+            posts = Post.objects.filter(id=post_id)
+            page = None
+            max_page = None
+            post_type = None
+            post_information = None
+        elif action == 'posts':
+            post_type = request.GET['posttype']
+            page_id = int(request.GET['pageid'])
+            if post_type == 'all':
+                following = request.user.following.all()
+                following = [i.follow for i in following]
+                posts = Post.objects.filter(user__in = following)
+                post_information = None
+            elif post_type == 'user':
+                uid = request.GET['uid']
+                target_user = User.objects.get(id=uid)
+                posts = target_user.post.all()
+                post_information = uid
+            posts = posts[(page_id-1)*POST_PER_PAGE:page_id*POST_PER_PAGE]
+            page = page_id
+            max_page = (posts.count()/POST_PER_PAGE)
+            max_page = int(ceil(float(((posts.count()-1)/POST_PER_PAGE))))
+            max_page = max(1, max_page)
 
         if data_type == "html":
             return render_to_response("api/get_post.html",
-                                      {'post':post},
+                                      {'posts': posts,
+                                       'action': action,
+                                       'post_type': post_type,
+                                       'post_information': post_information,
+                                       'page': page,
+                                       'max_page': max_page,
+                                       'tzlocal': tzlocal()},
                                       context_instance=RequestContext(request))
         elif data_type == "javascript":
             return render_to_response("api/get_post.js",
-                                      {'post':post},
+                                      {'posts': posts,
+                                       'action': action,
+                                       'post_type': post_type,
+                                       'post_information': post_information,
+                                       'page': page,
+                                       'max_page': max_page,
+                                       'tzlocal': tzlocal()},
                                       context_instance=RequestContext(request))
     except:
         raise
@@ -458,6 +492,25 @@ def post(request, post_id):
         target_user = post.user
     return render_to_response("post.html",
                               {'post': post, 'target_user': target_user, 'tzlocal': tzlocal()},
+                              context_instance=RequestContext(request))
+
+# show user page
+def user_page(request, uid):
+    user = User.objects.get(id=uid)
+    if user == request.user:
+        target_user = None
+    else:
+        target_user = user
+    return render_to_response("user.html",
+                              {'target_user': target_user, 'uid': uid, 'tzlocal': tzlocal()},
+                              context_instance=RequestContext(request))
+
+
+# show home page
+@login_required(login_url="/login")
+def home(request):
+    return render_to_response("home.html",
+                              {'tzlocal': tzlocal()},
                               context_instance=RequestContext(request))
 
 # like

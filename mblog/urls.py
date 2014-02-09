@@ -15,7 +15,7 @@ from mblog.views import main
 from mblog.views import logout
 from mblog.views import profile
 from mblog.views import password
-from mblog.views import home
+from mblog.views import user_page
 from mblog.views import following
 from mblog.views import follower
 from mblog.views import follow
@@ -23,6 +23,7 @@ from mblog.views import write
 from mblog.views import repo
 from mblog.views import get_post
 from mblog.views import post
+from mblog.views import home
 from mblog.views import comment
 from mblog.views import like
 from mblog.views import collect
@@ -35,7 +36,8 @@ urlpatterns = patterns('',
     url(r'^logout$', logout),
     url(r'^profile$', profile),
     url(r'^password$', password),
-    url(r'^u/(\d+)$', home),
+    url(r'^home$', home),
+    url(r'^u/(\d+)$', user_page),
     url(r'^u/(\d+)/following$', following),
     url(r'^u/(\d+)/follower$', follower),
     url(r'^follow$', follow),

@@ -1,7 +1,12 @@
 {% extends "index.html" %}
 
 {% block contain %}
+<div class="col-sm-9">
 
+	<div id="posts" class="row WB_box" style="margin:0;">
+	</div>
+
+</div>
 {% endblock %}
 
 {% block sidebar %}
@@ -33,5 +38,11 @@ function unfollow(){
 $('#follow-{{target_user.id}}')[0].onclick = function(){follow();}
 $('#unfollow-{{target_user.id}}')[0].onclick = function(){unfollow();}
 {% endif %}
+</script>
+{% endblock %}
+
+{% block script %}
+<script>
+	load_posts('all', "", '1', 'posts')
 </script>
 {% endblock %}

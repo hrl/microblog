@@ -77,7 +77,7 @@
 					{% if i|string|list|last == '9' or loop.last %}</div>{% endif %}
 				{% endfor %}
 				{% endjinja %}
-				</div></div>
+				</div>
 				<!-- end Tab panes -->
 			</div>
 			<!-- end comments -->

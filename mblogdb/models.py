@@ -124,3 +124,10 @@ class InformPool(models.Model):
 
     def __unicode__(self):
         return unicode(self.user)
+
+    def get_target(self):
+        if self.inform_type == 0 or self.inform_type == 2:
+            target = Post.objects.get(id=self.body)
+        elif self.inform_type == 1:
+            target = Comment.objects.get(id=self.body)
+        return target

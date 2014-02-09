@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block contain %}
+<div class="col-sm-9">
+
+	<div id="posts" class="row WB_box" style="margin:0;">
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+	load_posts('user',{{uid}}, '1', 'posts')
+</script>
+{% endblock %}
+
+

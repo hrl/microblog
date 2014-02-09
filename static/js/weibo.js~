@@ -27,13 +27,37 @@ function carousel_set_onclick(carousel_id, carousel_image_id, thumbnail_class){
 }
 
 function insert_post(post_id, div_id){
-	$.get('/get/post?datatype=html&postid='+post_id, function(data,status){
+	$.get('/get/post?action=post&datatype=html&postid='+post_id, function(data,status){
 		if (status == 'success'){
 			div_data = $('#'+div_id).html() + data;
 			$('#'+div_id).html(div_data);
-			$.getScript('/get/post?datatype=javascript&postid='+post_id);
+			$.getScript('/get/post?action=post&datatype=javascript&postid='+post_id);
 		}
 	});
+}
+
+function load_posts(post_type, post_information, page_id, div_id){
+	if (post_type == "all"){
+		$.get('/get/post?action=posts&datatype=html&pageid='+page_id+'&posttype='+post_type, function(data,status){
+			if (status == 'success'){
+				//div_data = $('#'+div_id).html() + data;
+				div_data = data;
+				$('#'+div_id).html(div_data);
+				$.getScript('/get/post?action=posts&datatype=javascript&pageid='+page_id+'&post_type='+post_type);
+			}
+		});
+	}
+	else if (post_type == "user"){
+		uid = post_information
+		$.get('/get/post?action=posts&datatype=html&pageid='+page_id+'&posttype='+post_type+'&uid='+uid, function(data,status){
+			if (status == 'success'){
+				//div_data = $('#'+div_id).html() + data;
+				div_data = data;
+				$('#'+div_id).html(div_data);
+				$.getScript('/get/post?action=posts&datatype=javascript&pageid='+page_id+'&post_type='+post_type+'&uid='+uid);
+			}
+		});
+	}
 }
 
 function get_post_list(type, data, div_id){
@@ -109,7 +133,7 @@ function uncollect(collect_id, uncollect_id, target_type, target_id){
 }
 
 function reply(comment_id, user_name){
-	text = $('#body').text() + '回复@' + user_name + ' :';
+	text = $('#body').text() + '回复@' + js.lang.String.decodeHtml(user_name) + ' :';
 	$('#body').text(text);
 	$('#reco_id').val(comment_id);
 }

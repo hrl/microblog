@@ -1,4 +1,8 @@
-	<div class="row WB_box" style="margin:0;">
+{% jinja %}
+{% for i in range(posts.count()) %}
+{% set post = posts[i] %}	
+
+<div class="row WB_box" style="margin:0;">
 		<div class="col-sm-offset-1 col-sm-10">
 			<div class="row WB_main" style="margin:0;">
 				<div class="col-sm-2 WB_face">
@@ -12,8 +16,7 @@
 						{{ post.encoded_body | safe }}
 						
 						<!-- show_image  -->
-						{% if post.get_image %}
-						{% jinja %}
+						{% if post.get_image() %}
 						<div class="row" style="margin:10px 0 0 0;">
 						{% for i in range( post.get_image()|length ) %}
 						<div class="col-sm-4 post-img-thumbnail post-{{post.id}}-img-thumbnail">
@@ -21,11 +24,9 @@
 						</div>
 						{% endfor %}
 						</div>
-						{% endjinja %}
 
       			<div id="post-{{post.id}}-image-carousel" class="carousel slide" style="display:none;" data-ride="carousel" data-interval=false>
         			<ol class="carousel-indicators">
-								{% jinja %}
 									{% for i in range( post.get_image()|length ) %}
 										{% if i == 0 %}
 										<li data-target="#post-{{post.id}}-image-carousel" data-slide-to={{i}} class="active"></li>
@@ -33,10 +34,8 @@
 										<li data-target="#post-{{post.id}}-image-carousel" data-slide-to={{i}} class=""></li>
 										{% endif %}
 									{% endfor %}
-								{% endjinja %}
 			        </ol>
  			       <div class="carousel-inner">
-								{% jinja %}
 									{% for i in range( post.get_image()|length ) %}
 										{% if i == 0 %}
 										<div class="item active">
@@ -48,7 +47,6 @@
     			      		</div>
 										{% endif %}
 									{% endfor %}
-								{% endjinja %}
        			 </div>
         			<a class="left carousel-control" href="#post-{{post.id}}-image-carousel" data-slide="prev">
           			<span class="glyphicon glyphicon-chevron-left"></span>
@@ -61,8 +59,7 @@
 						<!-- end show_image  -->
 
 						<!-- show_video  -->
-						{% if post.get_video %}
-						{% jinja %}
+						{% if post.get_video() %}
 						<div class="row" style="margin:10px 0 0 0;">
 						{% for i in range( post.get_video()|length ) %}
 						<div class="col-sm-12">
@@ -70,13 +67,11 @@
 						</div>
 						{% endfor %}
 						</div>
-						{% endjinja %}
 						{% endif %}
 						<!-- end show_video  -->
 
 						<!-- show_audio  -->
-						{% if post.get_audio %}
-						{% jinja %}
+						{% if post.get_audio() %}
 						<div class="row" style="margin:10px 0 0 0;">
 						{% for i in range( post.get_audio()|length ) %}
 						<div class="col-sm-12">
@@ -84,7 +79,6 @@
 						</div>
 						{% endfor %}
 						</div>
-						{% endjinja %}
 						{% endif %}
 						<!-- end show_audio  -->
 
@@ -99,8 +93,7 @@
 									{{ post.repo.encoded_body | safe }}
 									
 									<!-- show_image  -->
-									{% if post.repo.get_image %}
-									{% jinja %}
+									{% if post.repo.get_image() %}
 									<div class="row" style="margin:10px 0 0 0;">
 									{% for i in range( post.repo.get_image()|length ) %}
 									<div class="col-sm-4 post-repo-img-thumbnail post-repo-{{post.repo.id}}-img-thumbnail">
@@ -108,11 +101,9 @@
 									</div>
 									{% endfor %}
 									</div>
-									{% endjinja %}
 			
       						<div id="post-repo-{{post.repo.id}}-image-carousel" class="carousel slide" style="display:none;" data-ride="carousel" data-interval=false>
       			  			<ol class="carousel-indicators">
-											{% jinja %}
 												{% for i in range( post.repo.get_image()|length ) %}
 													{% if i == 0 %}
 													<li data-target="#post-repo-{{post.repo.id}}-image-carousel" data-slide-to={{i}} class="active"></li>
@@ -120,10 +111,8 @@
 													<li data-target="#post-repo-{{post.repo.id}}-image-carousel" data-slide-to={{i}} class=""></li>
 													{% endif %}
 												{% endfor %}
-											{% endjinja %}
 						        </ol>
  						       <div class="carousel-inner">
-											{% jinja %}
 												{% for i in range( post.repo.get_image()|length ) %}
 													{% if i == 0 %}
 													<div class="item active">
@@ -135,7 +124,6 @@
     						      		</div>
 													{% endif %}
 												{% endfor %}
-											{% endjinja %}
       			 			 </div>
       			  			<a class="left carousel-control" href="#post-repo-{{post.repo.id}}-image-carousel" data-slide="prev">
       			    			<span class="glyphicon glyphicon-chevron-left"></span>
@@ -148,8 +136,7 @@
 									<!-- end show_image  -->
 			
 									<!-- show_video  -->
-									{% if post.repo.get_video %}
-									{% jinja %}
+									{% if post.repo.get_video() %}
 									<div class="row" style="margin:10px 0 0 0;">
 									{% for i in range( post.repo.get_video()|length ) %}
 									<div class="col-sm-12">
@@ -157,13 +144,11 @@
 									</div>
 									{% endfor %}
 									</div>
-									{% endjinja %}
 									{% endif %}
 									<!-- end show_video  -->
 	
 									<!-- show_audio  -->
-									{% if post.repo.get_audio %}
-									{% jinja %}
+									{% if post.repo.get_audio() %}
 									<div class="row" style="margin:10px 0 0 0;">
 									{% for i in range( post.repo.get_audio()|length ) %}
 									<div class="col-sm-12">
@@ -171,21 +156,20 @@
 									</div>
 									{% endfor %}
 									</div>
-									{% endjinja %}
 									{% endif %}
 									<!-- end show_audio  -->
 								</div>
 								<div class="WB_func">
 									<div class="WB_date">
-										{{ post.repo.date | date:"y-m-d H:M:S" }}
+										{{ post.repo.date.astimezone(tzlocal).strftime('%Y-%m-%d %H:%M:%S') }}
 									</div>
 									<div class="WB_fix">
-										<a id="post-repo-{{post.repo.id}}-like" {% if user in post.repo.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{post.repo.like.count}})</a>
-										<a id="post-repo-{{post.repo.id}}-unlike" {% if user not in post.repo.like.all %}style="display:none;"{% endif %} href="javascript:;">取消赞({{post.repo.like.count}})</a> | 
-										<a id="post-repo-{{post.repo.id}}-repo" href="/repo/{{post.repo.id}}">转发({{post.repo.repoed.count}})</a> | 
-										<a id="post-repo-{{post.repo.id}}-collect" {% if user in post.repo.collect.all %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.repo.collect.count}})</a>
-										<a id="post-repo-{{post.repo.id}}-uncollect" {% if user not in post.repo.collect.all %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.repo.collect.count}})</a> | 
-										<a id="post-repo-{{post.repo.id}}-comment" href="/post/{{post.repo.id}}#comment_area">评论({{post.repo.comment.count}})</a>
+										<a id="post-repo-{{post.repo.id}}-like" {% if user in post.repo.like.all() %}style="display:none;"{% endif %} href="javascript:;">赞({{post.repo.like.count()}})</a>
+										<a id="post-repo-{{post.repo.id}}-unlike" {% if user not in post.repo.like.all() %}style="display:none;"{% endif %} href="javascript:;">取消赞({{post.repo.like.count()}})</a> | 
+										<a id="post-repo-{{post.repo.id}}-repo" href="/repo/{{post.repo.id}}">转发({{post.repo.repoed.count()}})</a> | 
+										<a id="post-repo-{{post.repo.id}}-collect" {% if user in post.repo.collect.all() %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.repo.collect.count()}})</a>
+										<a id="post-repo-{{post.repo.id}}-uncollect" {% if user not in post.repo.collect.all() %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.repo.collect.count()}})</a> | 
+										<a id="post-repo-{{post.repo.id}}-comment" href="/post/{{post.repo.id}}#comment_area">评论({{post.repo.comment.count()}})</a>
 									</div>
 								</div>
 							</div>
@@ -196,18 +180,51 @@
 					</div>
 					<div class="WB_func">
 						<div class="WB_date">
-							{{ post.date | date:"y-m-d H:i:s" }}
+							{{ post.date.astimezone(tzlocal).strftime('%Y-%m-%d %H:%M:%S') }}
 						</div>
 						<div class="WB_fix">
-							<a id="post-{{post.id}}-like" {% if user in post.like.all %}style="display:none;"{% endif %} href="javascript:;">赞({{post.like.count}})</a>
-							<a id="post-{{post.id}}-unlike" {% if user not in post.like.all %}style="display:none;"{% endif %} href="javascript:;">取消赞({{post.like.count}})</a> | 
-							<a id="post-{{post.id}}-repo" href="/repo/{{post.id}}">转发({{post.repoed.count}})</a> | 
-							<a id="post-{{post.id}}-collect" {% if user in post.collect.all %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.collect.count}})</a>
-							<a id="post-{{post.id}}-uncollect" {% if user not in post.collect.all %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.collect.count}})</a> | 
-							<a id="post-{{post.id}}-comment" href="/post/{{post.id}}#comment_area">评论({{post.comment.count}})</a>
+							<a id="post-{{post.id}}-like" {% if user in post.like.all() %}style="display:none;"{% endif %} href="javascript:;">赞({{post.like.count()}})</a>
+							<a id="post-{{post.id}}-unlike" {% if user not in post.like.all() %}style="display:none;"{% endif %} href="javascript:;">取消赞({{post.like.count()}})</a> | 
+							<a id="post-{{post.id}}-repo" href="/repo/{{post.id}}">转发({{post.repoed.count()}})</a> | 
+							<a id="post-{{post.id}}-collect" {% if user in post.collect.all() %}style="display:none;"{% endif %} href="javascript:;">收藏({{post.collect.count()}})</a>
+							<a id="post-{{post.id}}-uncollect" {% if user not in post.collect.all() %}style="display:none;"{% endif %} href="javascript:;">取消收藏({{post.collect.count()}})</a> | 
+							<a id="post-{{post.id}}-comment" href="/post/{{post.id}}#comment_area">评论({{post.comment.count()}})</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+{% endfor %}
+
+{% if max_page %}
+	<div class="row WB_box" style="margin:0;">
+		<div class="col-sm-offset-1 col-sm-10">
+			<div class="row WB_main" style="margin:0;">
+				<div class="col-sm-12">
+					<!-- Nav tabs -->
+					<ul class="nav nav-pills">
+						{% if page > 2 %}
+						<li class=""><a id="posts-page-{{page-2}}" href="javascript:;" data-toggle="tab">{{page-2}}</a></li>
+						{% endif %}
+						{% if page > 1 %}
+						<li class=""><a id="posts-page-{{page-1}}" href="javascript:;" data-toggle="tab">{{page-1}}</a></li>
+						{% endif %}
+						<li class="active"><a id="posts-page-{{page}}" href="javascript:;" data-toggle="tab">{{page}}</a></li>
+						{% if page < max_page %}
+						<li class=""><a id="posts-page-{{page+1}}" href="javascript:;" data-toggle="tab">{{page+1}}</a></li>
+						{% endif %}
+						{% if page+2 < max_page %}
+						<li class=""><a id="posts-page-……" href="javascript:;" data-toggle="tab">……</a></li>
+						<li class=""><a id="posts-page-{{ max_page }}" href="javascript:;" data-toggle="tab">{{ max_page }}</a></li>
+						{% endif %}
+					</ul>
+					<!-- end Nav tabs -->
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% endjinja %}
