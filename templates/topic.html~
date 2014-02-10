@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block contain %}
+<div class="col-sm-9">
+	<h1>{{topic.name}}</h1>
+	<div id="posts" class="row WB_box" style="margin:0;">
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+	load_posts('topic', "{{topic.id}}", '1', 'posts')
+</script>
+{% endblock %}
+
+

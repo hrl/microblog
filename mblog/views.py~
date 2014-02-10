@@ -455,6 +455,12 @@ def get_post(request):
                 target_user = User.objects.get(id=uid)
                 posts = target_user.post.all()
                 post_information = uid
+            elif post_type == 'topic':
+                uid = request.GET['uid']
+                target_topic = Topic.objects.get(id=uid)
+                posts = target_topic.post.all()
+                post_information = uid
+
             page = page_id
             max_page = (posts.count()/POST_PER_PAGE)
             max_page = int(ceil(float((posts.count()-1)/POST_PER_PAGE))+1)
@@ -494,7 +500,7 @@ def check_post(request):
     hour = int(date[11:13])
     minute = int(date[14:16])
     second = int(date[17:19])
-    tzinfo = tzloacal()
+    tzinfo = tzlocal()
     date = datetime.datetime(year, month, day, hour, minute, second, tzinfo=tzinfo)
     posts = Post.objects.filter(date__gt=date)
     return HttpResponse(unicode(posts.count()))

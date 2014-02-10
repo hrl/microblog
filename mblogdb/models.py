@@ -135,6 +135,6 @@ class InformPool(models.Model):
 
     def get_type(self):
         if self.inform_type == 0 or self.inform_type == 2:
-            return u'微薄'
+            return u'微博'
         elif self.inform_type == 1:
             return u'评论'

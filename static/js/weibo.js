@@ -58,6 +58,17 @@ function load_posts(post_type, post_information, page_id, div_id){
 			}
 		});
 	}
+	else if (post_type == "topic"){
+		uid = post_information
+		$.get('/get/post?action=posts&datatype=html&pageid='+page_id+'&posttype='+post_type+'&uid='+uid, function(data,status){
+			if (status == 'success'){
+				//div_data = $('#'+div_id).html() + data;
+				div_data = data;
+				$('#'+div_id).html(div_data);
+				$.getScript('/get/post?action=posts&datatype=javascript&pageid='+page_id+'&posttype='+post_type+'&uid='+uid);
+			}
+		});
+	}
 }
 
 function get_post_list(type, data, div_id){

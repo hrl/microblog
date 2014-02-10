@@ -26,6 +26,7 @@ from mblog.views import check_post
 from mblog.views import get_inform
 from mblog.views import del_inform
 from mblog.views import post
+from mblog.views import topic
 from mblog.views import home
 from mblog.views import comment
 from mblog.views import like
@@ -47,6 +48,7 @@ urlpatterns = patterns('',
     url(r'^write$', write),
     url(r'^comment$', comment),
     url(r'^post/(\d+)$', post),
+    url(r'^t/(\d+)$', topic),
     url(r'^repo/(\d+)$', repo),
     url(r'^get/post$', get_post),
     url(r'^check/post$', check_post),

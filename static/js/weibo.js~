@@ -149,5 +149,5 @@ function load_inform(){
 }
 
 function del_inform(inform_id){
-	$.get('/del/inform?id='+inform_id);
+	$.get('/del/inform?informid='+inform_id);
 }

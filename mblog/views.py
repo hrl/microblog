@@ -455,6 +455,12 @@ def get_post(request):
                 target_user = User.objects.get(id=uid)
                 posts = target_user.post.all()
                 post_information = uid
+            elif post_type == 'topic':
+                uid = request.GET['uid']
+                target_topic = Topic.objects.get(id=uid)
+                posts = target_topic.post.all()
+                post_information = uid
+
             page = page_id
             max_page = (posts.count()/POST_PER_PAGE)
             max_page = int(ceil(float((posts.count()-1)/POST_PER_PAGE))+1)
@@ -529,6 +535,14 @@ def post(request, post_id):
     return render_to_response("post.html",
                               {'post': post, 'target_user': target_user, 'tzlocal': tzlocal()},
                               context_instance=RequestContext(request))
+
+# show topic page
+def topic(request, topic_id):
+    topic = Topic.objects.get(id=topic_id)
+    return render_to_response("topic.html",
+                              {'topic': topic, 'tzlocal': tzlocal()},
+                              context_instance=RequestContext(request))
+
 
 # show user page
 def user_page(request, uid):
