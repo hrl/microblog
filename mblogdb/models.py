@@ -1,3 +1,4 @@
+#coding=utf-8
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -131,3 +132,9 @@ class InformPool(models.Model):
         elif self.inform_type == 1:
             target = Comment.objects.get(id=self.body)
         return target
+
+    def get_type(self):
+        if self.inform_type == 0 or self.inform_type == 2:
+            return u'微薄'
+        elif self.inform_type == 1:
+            return u'评论'

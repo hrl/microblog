@@ -5,11 +5,11 @@
 
         {% block title %}
         {% if target_user %}
-        <title>{{ target_user.userdetail.nickname }} - PandaMicroBlog</title>
+        <title>{{ target_user.userdetail.nickname|safe }} - PandaWeibo</title>
         {% elif user %}
-        <title>{{ user.userdetail.nickname }} - PandaMicroBlog</title>
+        <title>{{ user.userdetail.nickname|safe }} - PandaWeibo</title>
         {% else %}
-        <title>PandaMicroBlog</title>
+        <title>PandaWeibo</title>
         {% endif %}
         {% endblock %}
 
@@ -34,6 +34,10 @@
         <script src='/static/js/bootstrap.js'></script>
         <script src='/static/js/escape.js'></script>
         <script src='/static/js/weibo.js'></script>
+        <script>
+		load_inform();
+		setInterval(load_inform, 10000);
+	</script>
 
         {% block script_base %}
         {% endblock %}

@@ -56,7 +56,7 @@
 				{% set page_id = (i/10)|round(1, 'ceil')|int +1 %} 
 				{% set comment = post.comment.all()[i] %}
 					{% if i|string|list|last == '0' %}<div class="tab-pane {% if page_id|int == 1 %}active{% endif %}" id="page-{{page_id}}">{% endif %}
-					<div class="row COMMENT_main" style="margin:10px 0;">
+					<div id="comment-{{comment.id}}" class="row COMMENT_main" style="margin:10px 0;">
 						<div class="col-sm-1 COMMENT_face">
 							<img width="100%" src={{comment.user.userdetail.image}} href="/u/{{comment.user.id}}">
 						</div>

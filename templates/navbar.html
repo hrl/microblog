@@ -49,12 +49,6 @@
                     </li>
 
                     <li id="inform" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Information({{user.information.count}}) <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            {% for inform in user.information.all %}
-                            	<li><a id="inform-{{inform.id}}" href="javascript:;">{{inform.body}}</a></li>
-                            {% endfor %}
-                        </ul>
                     </li>
 
                     <li><a href="/logout">Logout</a></li>

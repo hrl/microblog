@@ -22,6 +22,9 @@ from mblog.views import follow
 from mblog.views import write
 from mblog.views import repo
 from mblog.views import get_post
+from mblog.views import check_post
+from mblog.views import get_inform
+from mblog.views import del_inform
 from mblog.views import post
 from mblog.views import home
 from mblog.views import comment
@@ -46,6 +49,9 @@ urlpatterns = patterns('',
     url(r'^post/(\d+)$', post),
     url(r'^repo/(\d+)$', repo),
     url(r'^get/post$', get_post),
+    url(r'^check/post$', check_post),
+    url(r'^get/inform$', get_inform),
+    url(r'^del/inform$', del_inform),
     url(r'^like$', like),
     url(r'^collect$', collect),
     url(r'^time/plus/(\d{1,2})/$', hours_ahead),

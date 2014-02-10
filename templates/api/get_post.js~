@@ -54,9 +54,21 @@ $('#post-repo-{{post.repo.id}}-uncollect')[0].onclick = function(){uncollect('po
 	{% if page < max_page %}
 	$('#posts-page-{{page+1}}')[0].onclick = function(){load_posts("{{post_type}}", "{{post_information}}", "{{page+1}}", "posts");}
 	{% endif %}
-	{% if page+2 < max_page %}
+	{% if page+1 < max_page %}
 	$('#posts-page-{{max_page}}')[0].onclick = function(){load_posts("{{post_type}}", "{{post_information}}", "{{max_page}}", "posts");}
 	{% endif %}
 {% endif %}
+
+$('#check_posts-a')[0].onclick = function(){load_posts("{{post_type}}", "{{post_information}}", "1", "posts");}
+function check_post(){
+	$.get('/check/post?date={{date}}', function(data,status){
+		if (status == 'success'){
+			count = Number(data)
+			if (count > 0){
+				$('#check_posts').show()
+			}
+		}
+	});
+}
 
 {% endjinja %}

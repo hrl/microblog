@@ -1,0 +1,6 @@
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Information({{user.information.count}}) <b class="caret"></b></a>
+<ul class="dropdown-menu">
+{% for inform in user.information.all %}
+	<li><a id="inform-{{inform.id}}" href="javascript:;"><span style="color:#FF0000">{{inform.get_target.user.userdetail.nickname|safe}}</span>在他的{{inform.get_type}}中提到了你</a></li>
+{% endfor %}
+</ul>

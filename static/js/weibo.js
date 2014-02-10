@@ -137,3 +137,17 @@ function reply(comment_id, user_name){
 	$('#body').text(text);
 	$('#reco_id').val(comment_id);
 }
+
+function load_inform(){
+	$.get('/get/inform?datatype=html', function(data,status){
+		if (status == 'success'){
+			div_data = data;
+			$('#inform').html(div_data);
+			$.getScript('/get/inform?datatype=javascript');
+		}
+	});
+}
+
+function del_inform(inform_id){
+	$.get('/del/inform?informid='+inform_id);
+}

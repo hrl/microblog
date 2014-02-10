@@ -1,0 +1,12 @@
+{% for inform in user.information.all %}
+$("#inform-{{inform.id}}")[0].onclick = function(){
+	if (inform.inform_type == 0 | inform.inform_type == 2){
+		window.open('/post/{{inform.body}}');
+	}
+	else if (inform.inform_type == 1){
+		window.open('/post/{{inform.get_target.post.id}}#comment-{{inform.get_target.id}}');
+	}
+	del_inform("{{inform.id}}");
+	load_inform();
+}
+{% endfor %}
