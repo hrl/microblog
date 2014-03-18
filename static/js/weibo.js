@@ -47,6 +47,16 @@ function load_posts(post_type, post_information, page_id, div_id){
 			}
 		});
 	}
+	else if (post_type == "collect"){
+		$.get('/get/post?action=posts&datatype=html&pageid='+page_id+'&posttype='+post_type, function(data,status){
+			if (status == 'success'){
+				//div_data = $('#'+div_id).html() + data;
+				div_data = data;
+				$('#'+div_id).html(div_data);
+				$.getScript('/get/post?action=posts&datatype=javascript&pageid='+page_id+'&posttype='+post_type);
+			}
+		});
+	}
 	else if (post_type == "user"){
 		uid = post_information
 		$.get('/get/post?action=posts&datatype=html&pageid='+page_id+'&posttype='+post_type+'&uid='+uid, function(data,status){
@@ -66,6 +76,17 @@ function load_posts(post_type, post_information, page_id, div_id){
 				div_data = data;
 				$('#'+div_id).html(div_data);
 				$.getScript('/get/post?action=posts&datatype=javascript&pageid='+page_id+'&posttype='+post_type+'&uid='+uid);
+			}
+		});
+	}
+	else if (post_type == "search"){
+		searchtext = post_information
+		$.get('/get/post?action=posts&datatype=html&pageid='+page_id+'&posttype='+post_type+'&searchtext='+searchtext, function(data,status){
+			if (status == 'success'){
+				//div_data = $('#'+div_id).html() + data;
+				div_data = data;
+				$('#'+div_id).html(div_data);
+				$.getScript('/get/post?action=posts&datatype=javascript&pageid='+page_id+'&posttype='+post_type+'&searchtext='+searchtext);
 			}
 		});
 	}
@@ -161,4 +182,12 @@ function load_inform(){
 
 function del_inform(inform_id){
 	$.get('/del/inform?informid='+inform_id);
+}
+
+function del_post(post_id){
+	$.get('/del/post?postid='+post_id, function(data,status){
+		if (status == 'success'){
+			history.go(0);
+		}
+	});
 }

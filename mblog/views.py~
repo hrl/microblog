@@ -116,8 +116,11 @@ def profile(request):
             user.nickname = cnickname
             user.self_describe = cdata.get('self_describe', '')
             user.mail = cdata.get('mail', None)
-            user.image = cdata.get('image', '/static/images/avatar.jpg')
-            user.birthday = cdata.get('birthday', '2014-01-01')
+            cimage = cdata.get('image')
+            if not cimage:
+                cimage = '/static/images/avatar.jpg'
+            user.image = cimage
+            user.birthday = cdata.get('birthday', '')
             user.city = 0
             user.sex = sex
             user.sexual_orientation = sexual_orientation
@@ -360,9 +363,13 @@ def repo(request, post_id):
             safe_body = unicode(Markup.escape(body))
             encoded_body = text_handle(safe_body, 'post')
 
+            if repo.repo:
+                source_repo = repo.repo
+            else:
+                source_repo = repo
 
             new_post = Post(user=request.user,
-                            repo=repo,
+                            repo=source_repo,
                             body=safe_body,
                             encoded_body=encoded_body,
                             date=get_time(),
@@ -380,7 +387,9 @@ def repo(request, post_id):
                    encoded_body)
 
             # inform repo
-            inform(repo.user, 'repo', new_post.id)
+            inform(repo.user.id, 'repo', new_post.id)
+            if repo.repo:
+                inform(source_repo.user.id, 'repo', new_post.id)
 
             return HttpResponseRedirect(u'/post/'+unicode(new_post.id))
     else:
@@ -437,7 +446,7 @@ def get_post(request):
 
         if action == 'post':
             post_id = request.GET['postid']
-            posts = Post.objects.filter(id=post_id)
+            posts = Post.objects.filter(id=post_id).filter(is_active=1)
             page = None
             max_page = None
             post_type = None
@@ -448,18 +457,24 @@ def get_post(request):
             if post_type == 'all':
                 following = request.user.following.all()
                 following = [i.follow for i in following]
-                posts = Post.objects.filter(user__in = following)
+                posts = Post.objects.filter(user__in = following).filter(is_active=1)
                 post_information = None
             elif post_type == 'user':
                 uid = request.GET['uid']
                 target_user = User.objects.get(id=uid)
-                posts = target_user.post.all()
+                posts = target_user.post.all().filter(is_active=1)
                 post_information = uid
             elif post_type == 'topic':
                 uid = request.GET['uid']
                 target_topic = Topic.objects.get(id=uid)
-                posts = target_topic.post.all()
+                posts = target_topic.post.all().filter(is_active=1)
                 post_information = uid
+            elif post_type == 'collect':
+                posts = request.user.collect_post.all().filter(is_active=1)
+                post_information = None
+            elif post_type == 'search':
+                post_information = request.GET['searchtext']
+                posts = Post.objects.filter(body__icontains=post_information).filter(is_active=1)
 
             page = page_id
             max_page = (posts.count()/POST_PER_PAGE)
@@ -525,9 +540,25 @@ def del_inform(request):
     except:
         raise
 
+# del post
+def del_post(request):
+    try:
+        post_id = request.GET['postid']
+        post = Post.objects.get(id=post_id)
+        assert request.user == post.user
+        post.is_active = False
+        post.save()
+        informs = InformPool.objects.filter(inform_type__in=[0,2]).filter(body=unicode(post.id))
+        informs.delete()
+        return HttpResponse('success')
+    except:
+        raise
+
 # show post page
 def post(request, post_id):
     post = Post.objects.get(id=post_id)
+    if not post.is_active:
+        return HttpResponseRedirect('/home')
     if post.user == request.user:
         target_user = None
     else:
@@ -535,6 +566,14 @@ def post(request, post_id):
     return render_to_response("post.html",
                               {'post': post, 'target_user': target_user, 'tzlocal': tzlocal()},
                               context_instance=RequestContext(request))
+
+# show topic page
+def topic(request, topic_id):
+    topic = Topic.objects.get(id=topic_id)
+    return render_to_response("topic.html",
+                              {'topic': topic, 'tzlocal': tzlocal()},
+                              context_instance=RequestContext(request))
+
 
 # show user page
 def user_page(request, uid):
@@ -613,6 +652,11 @@ def collect(request):
     except:
         raise Http404
 
+def collected(request):
+    return render_to_response("collect.html",
+                              {'tzlocal': tzlocal()},
+                              context_instance=RequestContext(request))
+
 def main(request):
     return render_to_response("main.html", context_instance=RequestContext(request))
 
@@ -647,10 +691,15 @@ def search_form(request):
     return render_to_response('search_form.html')
 
 def search(request):
-    if 'q' in request.GET:
-        q = request.GET['q']
-        users = User.objects.filter(username__icontains=q)
-        return render_to_response('search_results.html',
-                                  {'users': users, 'query': q})
+    if request.method == "POST":
+        search_text = request.POST.get('searchtext', '')
+        error = []
+        if not search_text:
+            error.append(u'至少输一个字吧…')
+        return render_to_response("search.html",
+                                  {'searchtext': search_text,
+                                   'error': error,
+                                   'tzlocal': tzlocal()},
+                                  context_instance=RequestContext(request))
     else:
-        return HttpResponse('You submitted an empty form.')
+        return HttpResponseRedirect('/home')

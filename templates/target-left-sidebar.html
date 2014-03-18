@@ -1,4 +1,4 @@
-{% if target_user %}
+{% if target_user and target_user != user %}
 <div class="col-sm-2 col-sm-offset-1">
               <div class="sidebar-module sidebar-module-inset">
                 <div class="thumbnail" style="width:100%;">
@@ -8,7 +8,7 @@
                 		<p>{{ target_user.userdetail.self_describe }}</p>
                 		<p><a id="following-{{target_user.id}}" href="/u/{{target_user.id}}/following" class="btn btn-default" role="button">关注{{ target_user.following.count }}</a></p>
                 		<p><a id="follower-{{target_user.id}}" href="/u/{{target_user.id}}/follower" class="btn btn-default" role="button">粉丝{{ target_user.follower.count }}</a></p>
-                		<p><a id="weibo-{{target_user.id}}" href="/u/{{target_user.id}}" class="btn btn-default" role="button">微博{{ target_user.post.count }}</a></p>
+                		<p><a id="weibo-{{target_user.id}}" href="/u/{{target_user.id}}" class="btn btn-default" role="button">微博{{ target_user.userdetail.count_post }}</a></p>
                 		<p>
 											{% jinja %}
 											<a id="follow-{{target_user.id}}" href="javascript:;" class="btn btn-primary" {% if user.userdetail.check_follow(target_user) %} style="display:none;" {% endif %} role="button">+关注</a>
@@ -30,7 +30,7 @@
                 		<p>{{ user.userdetail.self_describe }}</p>
                 		<p><a href="/u/{{user.id}}/following" class="btn btn-default" role="button">关注{{ user.following.count }}</a></p>
                 		<p><a href="/u/{{user.id}}/follower" class="btn btn-default" role="button">粉丝{{ user.follower.count }}</a></p>
-                		<p><a href="/u/{{user.id}}" class="btn btn-default" role="button">微博{{ user.post.count }}</a></p>
+                		<p><a href="/u/{{user.id}}" class="btn btn-default" role="button">微博{{ user.userdetail.count_post }}</a></p>
                 	</div>
     			</div>
               </div>

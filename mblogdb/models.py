@@ -6,7 +6,7 @@ class UserDetail(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     nickname = models.CharField(max_length=30, unique=True)
     self_describe = models.TextField(blank=True)
-    mail = models.EmailField(unique=True)
+    mail = models.EmailField(blank=True, null=True, unique=True)
     image = models.URLField(blank=True)
     birthday = models.DateField(blank=True, null=True)
     city = models.IntegerField(blank=True, null=True)
@@ -22,6 +22,9 @@ class UserDetail(models.Model):
             return True
         else:
             return False
+
+    def count_post(self):
+        return self.user.post.filter(is_active=1).count()
 
 
 class Follow(models.Model):

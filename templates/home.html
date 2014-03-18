@@ -34,7 +34,7 @@ function unfollow(){
 	})
 }
 
-{% if target_user %}
+{% if target_user and target_user != user %}
 $('#follow-{{target_user.id}}')[0].onclick = function(){follow();}
 $('#unfollow-{{target_user.id}}')[0].onclick = function(){unfollow();}
 {% endif %}

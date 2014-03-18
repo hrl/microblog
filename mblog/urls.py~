@@ -25,12 +25,14 @@ from mblog.views import get_post
 from mblog.views import check_post
 from mblog.views import get_inform
 from mblog.views import del_inform
+from mblog.views import del_post
 from mblog.views import post
 from mblog.views import topic
 from mblog.views import home
 from mblog.views import comment
 from mblog.views import like
 from mblog.views import collect
+from mblog.views import collected
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -54,8 +56,10 @@ urlpatterns = patterns('',
     url(r'^check/post$', check_post),
     url(r'^get/inform$', get_inform),
     url(r'^del/inform$', del_inform),
+    url(r'^del/[pst$', del_post),
     url(r'^like$', like),
     url(r'^collect$', collect),
+    url(r'^collected$', collected),
     url(r'^time/plus/(\d{1,2})/$', hours_ahead),
     url(r'^hello/$', hello),
     url(r'^show/$', display_meta),

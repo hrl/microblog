@@ -30,9 +30,9 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                	<form class="navbar-form navbar-left" role="search" action="/search">
+                	<form class="navbar-form navbar-left" role="search" action="/search/" method="post">
                 		<div class="form-group">
-                			<input type="text" class="form-control" name="search" id="search" placeholder="">
+                			<input type="text" class="form-control" name="searchtext" id="searchtext" placeholder="">
                 		</div>
                 		<button type="submit" class="btn btn-default">Search</button>
                 		{% csrf_token %}
@@ -45,6 +45,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="/profile">Profile</a></li>
                             <li><a href="/password">Password</a></li>
+                            <li><a href="/collected">Collect</a></li>
                         </ul>
                     </li>
 

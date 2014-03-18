@@ -30,7 +30,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                	<form class="navbar-form navbar-left" role="search" action="/search">
+                	<form class="navbar-form navbar-left" role="search" action="/search/" method="post">
                 		<div class="form-group">
                 			<input type="text" class="form-control" name="search" id="search" placeholder="">
                 		</div>
@@ -45,16 +45,11 @@
                         <ul class="dropdown-menu">
                             <li><a href="/profile">Profile</a></li>
                             <li><a href="/password">Password</a></li>
+                            <li><a href="/collected">Collect</a></li>
                         </ul>
                     </li>
 
                     <li id="inform" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Information({{user.information.count}}) <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            {% for inform in user.information.all %}
-                            	<li><a id="inform-{{inform.id}}" href="javascript:;"><span style="color:#FF0000">{{inform.get_target.user.userdetail.nickname|safe}}</span>提到了你{{inform.get_type}}</a></li>
-                            {% endfor %}
-                        </ul>
                     </li>
 
                     <li><a href="/logout">Logout</a></li>

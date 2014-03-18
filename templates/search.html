@@ -2,6 +2,13 @@
 
 {% block contain %}
 <div class="col-sm-9">
+	{% if error %}
+		{% for i in error %}
+		<h3>{{i}}</h3>
+		{% endfor %}
+	{% else %}
+		<h3>搜索：{{searchtext}}</h3>
+	{% endif %}
 
 	<div id="posts" class="row WB_box" style="margin:0;">
 	</div>
@@ -15,7 +22,9 @@
 
 
 {% block script %}
+{% if not error %}
 <script>
-	load_posts('collect', "", '1', 'posts')
+	load_posts('search', "{{searchtext}}", '1', 'posts')
 </script>
+{% endif %}
 {% endblock %}

@@ -17,26 +17,27 @@ $('#post-{{post.id}}-unlike')[0].onclick = function(){unlike('post-{{post.id}}-l
 
 $('#post-{{post.id}}-collect')[0].onclick = function(){collect('post-{{post.id}}-collect', 'post-{{post.id}}-uncollect', "post", {{post.id}});}
 $('#post-{{post.id}}-uncollect')[0].onclick = function(){uncollect('post-{{post.id}}-collect', 'post-{{post.id}}-uncollect', "post", {{post.id}});}
-
+{% if post.user == user %}
+$('#post-{{post.id}}-delete')[0].onclick = function(){del_post("{{post.id}}");}
+{% endif %}
 //repo
 {% if post.repo %}
-
+{% if post.repo.is_active %}
 post_repo_img_thumbnail_width = $('.post-repo-img-thumbnail').width();
 $('.post-repo-img-thumbnail').height(post_repo_img_thumbnail_width);
-
 {% for i in range( post.repo.get_image()|length ) %}
-image_set_size("post-repo-{{post.repo.id}}-image-thumbnail-{{i}}", post_repo_img_thumbnail_width);
-thumbnail_set_onclick("post-repo-{{post.repo.id}}-image-carousel", "post-repo-{{post.repo.id}}-image-thumbnail-{{i}}", 'post-repo-{{post.repo.id}}-img-thumbnail', {{i}});
-carousel_set_onclick("post-repo-{{post.repo.id}}-image-carousel", "post-repo-{{post.repo.id}}-image-carousel-{{i}}", 'post-repo-{{post.repo.id}}-img-thumbnail')
+image_set_size("post-{{post.id}}-repo-{{post.repo.id}}-image-thumbnail-{{i}}", post_repo_img_thumbnail_width);
+thumbnail_set_onclick("post-{{post.id}}-repo-{{post.repo.id}}-image-carousel", "post-{{post.id}}-repo-{{post.repo.id}}-image-thumbnail-{{i}}", 'post-{{post.id}}-repo-{{post.repo.id}}-img-thumbnail', {{i}});
+carousel_set_onclick("post-{{post.id}}-repo-{{post.repo.id}}-image-carousel", "post-{{post.id}}-repo-{{post.repo.id}}-image-carousel-{{i}}", 'post-{{post.id}}-repo-{{post.repo.id}}-img-thumbnail')
 {% endfor %}
 
 
-$('#post-repo-{{post.repo.id}}-like')[0].onclick = function(){like('post-repo-{{post.repo.id}}-like', "post-repo-{{post.repo.id}}-unlike", "post", {{post.repo.id}});}
-$('#post-repo-{{post.repo.id}}-unlike')[0].onclick = function(){unlike('post-repo-{{post.repo.id}}-like', "post-repo-{{post.repo.id}}-unlike", "post", {{post.repo.id}});}
+$('#post-{{post.id}}-repo-{{post.repo.id}}-like')[0].onclick = function(){like('post-{{post.id}}-repo-{{post.repo.id}}-like', "post-{{post.id}}-repo-{{post.repo.id}}-unlike", "post", {{post.repo.id}});}
+$('#post-{{post.id}}-repo-{{post.repo.id}}-unlike')[0].onclick = function(){unlike('post-{{post.id}}-repo-{{post.repo.id}}-like', "post-{{post.id}}-repo-{{post.repo.id}}-unlike", "post", {{post.repo.id}});}
 
-$('#post-repo-{{post.repo.id}}-collect')[0].onclick = function(){collect('post-repo-{{post.repo.id}}-collect', 'post-repo-{{post.repo.id}}-uncollect', "post", {{post.repo.id}});}
-$('#post-repo-{{post.repo.id}}-uncollect')[0].onclick = function(){uncollect('post-repo-{{post.repo.id}}-collect', 'post-repo-{{post.repo.id}}-uncollect', "post", {{post.repo.id}});}
-
+$('#post-{{post.id}}-repo-{{post.repo.id}}-collect')[0].onclick = function(){collect('post-{{post.id}}-repo-{{post.repo.id}}-collect', 'post-{{post.id}}-repo-{{post.repo.id}}-uncollect', "post", {{post.repo.id}});}
+$('#post-{{post.id}}-repo-{{post.repo.id}}-uncollect')[0].onclick = function(){uncollect('post-{{post.id}}-repo-{{post.repo.id}}-collect', 'post-{{post.id}}-repo-{{post.repo.id}}-uncollect', "post", {{post.repo.id}});}
+{% endif %}
 {% endif %}
 
 {% endfor %}
@@ -65,10 +66,11 @@ function check_post(){
 		if (status == 'success'){
 			count = Number(data)
 			if (count > 0){
-				$('#check_posts').show()
+				$('#check_posts').show();
+				clearInterval(check_post_timer);
 			}
 		}
 	});
 }
-
+check_post_timer = setInterval(check_post, 10000);
 {% endjinja %}

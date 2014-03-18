@@ -16,7 +16,7 @@
 
 {% block script %}
 <script>
-	insert_post({{post.id}}, 'posts')
+	load_posts('user',{{uid}}, '1', 'posts')
 </script>
 {% endblock %}
 
